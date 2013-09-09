@@ -68,8 +68,8 @@ class Models {
     List<String> pve_params = obj['fields']['description_params_pve'].split(',');
     List<String> pvp_params = obj['fields']['description_params_pvp'].split(',');
     for (int n=0; n < pvp_params.length; n++) {
-      pve_description.replaceAll('{${n}}', pve_params[n]);
-      pvp_description.replaceAll('{${n}}', pvp_params[n]);
+      pve_description = pve_description.replaceAll('{${n}}', pve_params[n]);
+      pvp_description = pvp_description.replaceAll('{${n}}', pvp_params[n]);
     }
 
     return new SkillLevel()
