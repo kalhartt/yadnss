@@ -7,8 +7,7 @@ import 'lib/skill_points.dart';
 import 'lib/skill_warning.dart';
 
 BuildURL build_url;
-List<SkillGrid> skill_grid;
-DivElement grid_container;
+SkillGrid skill_grid;
 SkillInfo skill_info;
 SkillPoints skill_points;
 SkillWarning skill_warning;
@@ -16,20 +15,30 @@ SkillWarning skill_warning;
 Models model;
 String json_url = "all/60/27";
 String base_url = "http://localhost:8000/";
+String static_base = 'static/';
 
 void main() {
   // Collect components
   build_url = query('#build-url').xtag;
-  grid_container = query('#accordion');
+  skill_grid = query('#skill-grid').xtag;
   skill_info = query('#skill-info').xtag;
-  skill_points = query('skill-points').xtag
-    ..sp_limits = [104, 107, 104, 167];
+  skill_points = query('skill-points').xtag;
   skill_warning = query('#skill-warning').xtag;HttpRequest.getString('${base_url}${json_url}').then(load_models);
-  
 }
 
 void load_models(String response) {
+  // Load the models
   model = new Models(response);
-  skill_points.set_labels(model.job_byindx);
-  skill_info.set_info(model.job_byindx[0].skilltree[0], 0);
+  
+  // Reset widgets
+  skill_points
+    ..clear()
+    ..sp_limits = [104, 107, 104, 167]
+    ..set_labels(model.job_byindx);
+  skill_info.clear();
+  skill_warning.clear();
+  skill_grid.clear();
+  model.job_byindx.forEach((job) => skill_grid.add_icons(job, static_base));
+  
+  // Connect mouse events
 }
