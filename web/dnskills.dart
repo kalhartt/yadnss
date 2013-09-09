@@ -31,4 +31,5 @@ void main() {
 void load_models(String response) {
   model = new Models(response);
   skill_points.set_labels(model.job_byindx);
+  skill_info.set_info(model.job_byindx[0].skilltree[0], 0);
 }
