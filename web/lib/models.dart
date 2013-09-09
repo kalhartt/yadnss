@@ -4,8 +4,8 @@ import 'dart:json';
 class Models {
   Map<int, Job> job_byid = new Map<int, Job>();
   List<Job> job_byindx = new List<Job>();
-  Map<int, Skill> skill_byid;
-  Map<int, SkillLevel> slevel_byid;
+  Map<int, Skill> skill_byid = new Map<int, Skill>();
+  Map<int, SkillLevel> slevel_byid = new Map<int, SkillLevel>();
 
   Models(String response) {
     List<Map> parsed = parse(response);
@@ -65,8 +65,8 @@ class Models {
   SkillLevel parse_slevel(Map obj, Map<int, String> description_temp) {
     String pve_description = description_temp[obj['fields']['skill']];
     String pvp_description = description_temp[obj['fields']['skill']];
-    String pve_params = obj['fields']['description_params_pve'].split(',');
-    String pvp_params = obj['fields']['description_params_pvp'].split(',');
+    List<String> pve_params = obj['fields']['description_params_pve'].split(',');
+    List<String> pvp_params = obj['fields']['description_params_pvp'].split(',');
     for (int n=0; n < pvp_params.length; n++) {
       pve_description.replaceAll('{${n}}', pve_params[n]);
       pvp_description.replaceAll('{${n}}', pvp_params[n]);
