@@ -6,6 +6,10 @@
     <title>Sample app</title>
     <link rel="stylesheet" href="static/css/bootstrap.css">
     <link rel="import" href="lib/build_url.html">
+    <link rel="import" href="lib/skill_grid.html">
+    <link rel="import" href="lib/skill_info.html">
+    <link rel="import" href="lib/skill_points.html">
+    <link rel="import" href="lib/skill_warning.html">
     <script src="packages/polymer/boot.js"></script>
   </head>
   <body>
@@ -14,6 +18,20 @@
       
       <div class="row">
         <build-url id="build-url"></build-url>
+        <hr>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-4 .col-sm-push-8" id="col-left">
+          <div class="row"><skill-points id="skill-points"></skill-points></div>
+          <div class="row"><skill-warning id="skill-warning"></skill-warning></div>
+        </div>
+        <div class="col-md-4 .col-sm-pull-4" id="col-center">
+          <div class="panel-group" id="accordion"></div>
+        </div>
+        <div class="col-md-4 .col-sm-pull-4" id="col-right">
+          <skill-info id="skill-info"></skill-info>
+        </div>
       </div>
       
     </div>
