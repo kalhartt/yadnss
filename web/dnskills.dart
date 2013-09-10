@@ -109,7 +109,6 @@ void update() {
     }
     req_jobsp.forEach(skill_warning.add_warning);
     req_skill.forEach(skill_warning.add_warning);
-    
-    build_url.value = '${base_url}${build_url.hash_build(model.job_byindx.last, 60, slevels)}';
   }
+  build_url.value = '${base_url}${build_url.hash_build(model.job_byindx.last, 60, slevels)}';
 }

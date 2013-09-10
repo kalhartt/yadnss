@@ -11,13 +11,13 @@ class BuildURL extends PolymerElement with ObservableMixin {
     45,95 // -_
     ];
   static final Map<int, String> _ALPHABET = new Map.fromIterable(
-      _asciipoints,
+      new Iterable.generate(64, (i) => i),
       key: (int n) => n,
-      value: (int n) => new String.fromCharCode(n)
+      value: (int n) => new String.fromCharCode(_asciipoints[n])
       );
   static final Map<String, int> _ALPHABET_REVERSE = new Map.fromIterable(
-      _asciipoints,
-      key: (int n) => new String.fromCharCode(n),
+      new Iterable.generate(64, (i) => i),
+      key: (int n) => new String.fromCharCode(_asciipoints[n]),
       value: (int n) => n
       );
   @observable String value = '';
@@ -40,13 +40,14 @@ class BuildURL extends PolymerElement with ObservableMixin {
     return result;
   }
 
-  void hash_build(Job job, int level, List<SkillLevel> slevels) {
+  String hash_build(Job job, int level, List<SkillLevel> slevels) {
     StringBuffer result = new StringBuffer();
     for (SkillLevel slevel in slevels) {
       String tmp = _hash( (slevel.skill.job.index<<10)|(slevel.level<<5)|slevel.skill.tree_index );
       result.write( tmp.length==2 ? tmp : '0${tmp}');
     }
     result.write('.${_hash((job.id<<7)|level)}');
+    return result.toString();
   }
 
   List<SkillLevel> unhash_slevels(List<Job> job_byindx, String msg){
