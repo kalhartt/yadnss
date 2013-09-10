@@ -99,4 +99,13 @@ class SkillGrid extends PolymerElement {
     shadowRoot.queryAll('.skill-grid-icon').forEach(
         (Element e) => e.onContextMenu.listen(handle));
   }
+  
+  List<SkillLevel> get_slevels() {
+    List<SkillLevel> result = new List<SkillLevel>();
+    for (SkillIcon si in skillicon.values) {
+      if (si.level == 0) { continue; }
+      result.add(si.skill.level[si.level]);
+    }
+    return result;
+  }
 }
