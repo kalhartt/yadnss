@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="/static/css/bootstrap.css"></script>
+    <script src="/static/js/polymer.min.js"></script>
+    <link rel="import" href="polymer-elements/build_url.html">
+    <link rel="import" href="polymer-elements/polymer-ajax.html">
+    <link rel="import" href="polymer-elements/polymer-collapse.html">
+    <link rel="import" href="polymer-elements/polymer-ui-collapsible.html">
+    <link rel="import" href="polymer-elements/polymer-ui-accordion.html">
+  </head>
+  <body>
+    <polymer-ajax url="http://guarded-plains-4985.herokuapp.com/all/60/5" handleAs="json"></polymer-ajax>
+    <div class="container">
+        <div class="row">
+            <build-url></build-url>
+            <hr>
+        </div>
+        <div class="row show-grid">
+            <div class="col-md-4 col-md-push-4">
+                <polymer-ui-accordion selected="0">
+                    <polymer-ui-collapsible class="panel panel-default">
+                            <span class="panel-heading polymer-ui-collapsible-header">Heading</span>
+                            <span class="panel-body">Body</span>
+                    </polymer-ui-collapsible>
+                    <polymer-ui-collapsible class="panel panel-default">
+                            <span class="panel-heading polymer-ui-collapsible-header">Heading</span>
+                            <span class="panel-body">Body</span>
+                    </polymer-ui-collapsible>
+                    <polymer-ui-collapsible class="panel panel-default">
+                            <span class="panel-heading polymer-ui-collapsible-header">Heading</span>
+                            <span class="panel-body">Body</span>
+                    </polymer-ui-collapsible>
+                </polymer-ui-accordion>
+            </div>
+            <div class="col-md-4 col-md-pull-4">
+                <div class="well">COL 1</div>
+            </div>
+            <div class="col-md-4">
+                <div class="well">COL 3</div>
+            </div>
+        </div>
+    </div>
+    <script src="/static/js/main.js"></script>
+    <script src="/static/js/models.js"></script>
+  </body>
+</html>
