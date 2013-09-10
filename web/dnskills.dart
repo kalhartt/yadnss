@@ -83,5 +83,33 @@ void mouse_context(MouseEvent e) {
 }
 
 void update() {
+  List<SkillLevel> slevels = skill_grid.get_slevels();
+  skill_points.calc_sp(slevels);
+  skill_warning.clear();
   
+  // SP checks
+  List<String> req_jobsp = new List<String>();
+  List<String> req_skill = new List<String>();
+  if (skill_points.sp_used.last > skill_points.sp_limits.last) { skill_warning.add_warning('Total SP limit exceeded'); }
+  for (Job job in model.job_byindx) {
+    if (skill_points.sp_used[job.index] > skill_points.sp_limits[job.index]) {
+      skill_warning.add_warning('${job.name} SP Limit Exceeded');
+    }
+  }
+  for (SkillLevel slevel in slevels) {
+    for (Job job in model.job_byindx) {
+      if (skill_points.sp_used[job.index] < slevel.skill.sp_required[job.index]){ 
+        req_jobsp.add('${job.name} SP ${slevel.skill.sp_required[job.index]} required for skill ${slevel.skill.name}');
+      }
+    }
+    for (SkillLevel parent in slevel.skill.parent) { 
+      if (!slevels.any((SkillLevel sl) => sl.skill == parent.skill && sl.level >= parent.level)) {
+        req_skill.add('${parent.skill.name} level ${parent.level} required for ${slevel.skill.name}');
+      }
+    }
+    req_jobsp.forEach(skill_warning.add_warning);
+    req_skill.forEach(skill_warning.add_warning);
+    
+    build_url.value = '${base_url}${build_url.hash_build(model.job_byindx.last, 60, slevels)}';
+  }
 }
