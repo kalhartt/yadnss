@@ -3,3 +3,4 @@ pubspec.lock
 out
 deploy
 .buildlog
+web/static/img

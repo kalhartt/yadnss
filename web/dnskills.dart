@@ -41,4 +41,47 @@ void load_models(String response) {
   model.job_byindx.forEach((job) => skill_grid.add_icons(job, static_base));
   
   // Connect mouse events
+  skill_grid.connect_mover(mouse_over);
+  skill_grid.connect_mclick(mouse_click);
+  skill_grid.connect_mcontext(mouse_context);
+}
+
+void mouse_over(MouseEvent e) {
+  int skill_id = int.parse(e.target.id.split('-')[1]);
+  Skill skill = model.skill_byid[skill_id];
+  SkillIcon skillicon = skill_grid.skillicon[skill_id];
+  skill_info.set_info(skill, skillicon.level);
+}
+
+void mouse_click(MouseEvent e) {
+  int skill_id = int.parse(e.target.id.split('-')[1]);
+  Skill skill = model.skill_byid[skill_id];
+  SkillIcon skillicon = skill_grid.skillicon[skill_id];
+  
+  if (skill.level.containsKey(skillicon.level+1)) {
+    if (skillicon.level == 0) { skillicon.set_hi(); }
+    skillicon.level += 1;
+    skillicon.text.text = '${skillicon.level}/${skill.level.length}';
+    skill_info.set_info(skill, skillicon.level);
+    update();
+  }
+}
+
+void mouse_context(MouseEvent e) {
+  e.preventDefault();
+  int skill_id = int.parse(e.target.id.split('-')[1]);
+  Skill skill = model.skill_byid[skill_id];
+  SkillIcon skillicon = skill_grid.skillicon[skill_id];
+  
+  if (skillicon.level>0) {
+    if (skillicon.level == 1) { skillicon.set_lo(); }
+    skillicon.level -= 1;
+    skillicon.text.text = '${skillicon.level}/${skill.level.length}';
+    skill_info.set_info(skill, skillicon.level);
+    update();
+  }
+}
+
+void update() {
+  
 }

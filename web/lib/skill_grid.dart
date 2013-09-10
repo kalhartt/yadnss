@@ -16,7 +16,7 @@ class SkillIcon {
     int posx = (3-index%4)*60 + 10;
     int posy = (index~/4)*60 + 10;
     img = new ImageElement()
-      ..id = 'skillicon-${skill.job.id}-${index}'
+      ..id = 'skillicon-${skill.id}'
       ..src = '${static_base}img/lo/${skill.icon}.png'
       ..classes.add('skill-grid-icon')
       ..style.right = '${posx}px'
@@ -30,11 +30,11 @@ class SkillIcon {
   }
   
   void set_lo() {
-    this.img.src = '${static_base}img/hi/${skill.icon}.png';
+    this.img.src = '${static_base}img/lo/${skill.icon}.png';
   }
   
   void set_hi() {
-    this.img.src = '${static_base}img/lo/${skill.icon}.png';
+    this.img.src = '${static_base}img/hi/${skill.icon}.png';
   }
 }
 
@@ -73,9 +73,9 @@ class SkillGrid extends PolymerElement {
           ..src = "${static_base}img/bg/${job.id}.png";
     wrapper.children.add(background);
     for (Skill skill in job.skilltree.values) {
-      skillicon[skill.tree_index] = new SkillIcon(skill, static_base, '0/${skill.level.length}');
-      wrapper.children.add(skillicon[skill.tree_index].img);
-      wrapper.children.add(skillicon[skill.tree_index].text);
+      skillicon[skill.id] = new SkillIcon(skill, static_base, '0/${skill.level.length}');
+      wrapper.children.add(skillicon[skill.id].img);
+      wrapper.children.add(skillicon[skill.id].text);
     }
     shadowRoot.query('#accordion').children.add(panel);
   }
@@ -83,5 +83,20 @@ class SkillGrid extends PolymerElement {
   void clear() {
     skillicon = new Map<int,SkillIcon>();
     shadowRoot.query('#accordion').children.clear();
+  }
+  
+  void connect_mover(void handle(MouseEvent e)) {
+    shadowRoot.queryAll('.skill-grid-icon').forEach(
+        (Element e) => e.onMouseOver.listen(handle));
+  }
+  
+  void connect_mclick(void handle(MouseEvent e)) {
+    shadowRoot.queryAll('.skill-grid-icon').forEach(
+        (Element e) => e.onClick.listen(handle));
+  }
+  
+  void connect_mcontext(void handle(MouseEvent e)) {
+    shadowRoot.queryAll('.skill-grid-icon').forEach(
+        (Element e) => e.onContextMenu.listen(handle));
   }
 }
