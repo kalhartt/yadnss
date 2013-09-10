@@ -6,14 +6,12 @@ import 'dart:html';
 class SkillWarning extends PolymerElement {
   bool get applyAuthorStyles => true;
   
-  void add_warining(String msg){
-    shadowRoot.query('.panel-body').children.add(
-      new DivElement()
-        ..classes.addAll(['alert', 'alert-danger'])
-        ..text = msg);
+  void add_warning(String msg){
+    shadowRoot.query('ul').children.add(
+      new Element.html('<li>${msg}</li>'));
   }
   
   void clear() {
-    shadowRoot.query('.panel-body').children.clear();
+    shadowRoot.query('ul').children.clear();
   }
 }
