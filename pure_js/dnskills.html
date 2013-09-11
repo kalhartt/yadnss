@@ -3,6 +3,7 @@
   <head>
     <link rel="stylesheet" href="/static/css/bootstrap.css"></script>
     <script src="/static/js/polymer.min.js"></script>
+    <link rel="import" href="polymer-elements/skill_points.html">
     <link rel="import" href="polymer-elements/build_url.html">
     <link rel="import" href="polymer-elements/polymer-ajax.html">
     <link rel="import" href="polymer-elements/polymer-collapse.html">
@@ -10,7 +11,7 @@
     <link rel="import" href="polymer-elements/polymer-ui-accordion.html">
   </head>
   <body>
-    <polymer-ajax url="http://guarded-plains-4985.herokuapp.com/all/60/5" handleAs="json"></polymer-ajax>
+    <polymer-ajax url="http://localhost:8000/all/60/5" auto handleAs="json"></polymer-ajax>
     <div class="container">
         <div class="row">
             <build-url></build-url>
@@ -34,7 +35,7 @@
                 </polymer-ui-accordion>
             </div>
             <div class="col-md-4 col-md-pull-4">
-                <div class="well">COL 1</div>
+                <skill-points></skill-points>
             </div>
             <div class="col-md-4">
                 <div class="well">COL 3</div>
