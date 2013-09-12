@@ -3,7 +3,10 @@
   <head>
     <link rel="stylesheet" href="/static/css/bootstrap.css"></script>
     <script src="/static/js/polymer.min.js"></script>
+    <link rel="import" href="polymer-elements/skill_grid.html">
     <link rel="import" href="polymer-elements/skill_points.html">
+    <link rel="import" href="polymer-elements/skill_icon.html">
+    <link rel="import" href="polymer-elements/skill_info.html">
     <link rel="import" href="polymer-elements/build_url.html">
     <link rel="import" href="polymer-elements/polymer-ajax.html">
     <link rel="import" href="polymer-elements/polymer-collapse.html">
@@ -11,7 +14,7 @@
     <link rel="import" href="polymer-elements/polymer-ui-accordion.html">
   </head>
   <body>
-    <polymer-ajax url="http://localhost:8000/all/60/5" auto handleAs="json"></polymer-ajax>
+    <polymer-ajax url="" handleAs="json"></polymer-ajax>
     <div class="container">
         <div class="row">
             <build-url></build-url>
@@ -20,29 +23,23 @@
         <div class="row show-grid">
             <div class="col-md-4 col-md-push-4">
                 <polymer-ui-accordion selected="0">
-                    <polymer-ui-collapsible class="panel panel-default">
-                            <span class="panel-heading polymer-ui-collapsible-header">Heading</span>
-                            <span class="panel-body">Body</span>
-                    </polymer-ui-collapsible>
-                    <polymer-ui-collapsible class="panel panel-default">
-                            <span class="panel-heading polymer-ui-collapsible-header">Heading</span>
-                            <span class="panel-body">Body</span>
-                    </polymer-ui-collapsible>
-                    <polymer-ui-collapsible class="panel panel-default">
-                            <span class="panel-heading polymer-ui-collapsible-header">Heading</span>
-                            <span class="panel-body">Body</span>
-                    </polymer-ui-collapsible>
                 </polymer-ui-accordion>
             </div>
             <div class="col-md-4 col-md-pull-4">
                 <skill-points></skill-points>
+                <div class="panel panel-default">
+                    <div class="panel-heading">Warnings</div>
+                    <div class="panel-body">
+                    <ul class="skill-warning"></ul></div>
+                </div>
             </div>
             <div class="col-md-4">
-                <div class="well">COL 3</div>
+                <skill-info></skill-info>
             </div>
         </div>
     </div>
+    <script src="/static/js/sprintf.min.js"></script>
+    <script src="/static/js/model.js"></script>
     <script src="/static/js/main.js"></script>
-    <script src="/static/js/models.js"></script>
   </body>
 </html>

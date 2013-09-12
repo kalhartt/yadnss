@@ -5960,33 +5960,49 @@ td.visible-print {
     display: none !important;
   }
 }
-.skill-grid-panel .wrapper {
+
+skill-info .info-default {
+  color: #333333;
+}
+skill-info .info-yellow {
+  color: #c09853;
+}
+skill-info .info-orange {
+  color: #b94a48;
+}
+
+skill-grid {
+  display: block;
   position: relative;
   width: 250px;
   height: 370px;
   margin-left: auto;
   margin-right: auto;
 }
-.skill-grid-panel .skill-grid-bg {
+
+skill-grid .skill-grid-bg {
   position: absolute;
   left: 0;
   top: 0;
   z-index: 5;
 }
-.skill-grid-panel .skill-grid-icon {
-  position: absolute;
-  z-index: 10;
+
+skill-icon {
+    position: absolute;
+    width: 50px;
+    height: 50px;
 }
-.skill-grid-panel .skill-grid-text {
-  position: absolute;
-  z-index: 15;
+
+skill-icon img {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 10;
 }
-.skill-info-panel .info-default {
-  color: #333333;
-}
-.skill-info-panel .info-yellow {
-  color: #c09853;
-}
-.skill-info-panel .info-orange {
-  color: #b94a48;
+
+skill-icon span {
+    position: absolute;
+    top: 35px;
+    right: 0px;
+    z-index: 15;
 }
