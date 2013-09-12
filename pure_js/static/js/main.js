@@ -1,4 +1,4 @@
-var build_url, skill_points, skill_warning, skill_info, char_level, url_base, json_base, json_url;
+var build_url, skill_points, skill_warning, skill_info, char_level, url_base, json_base, json_url, level_input;
 var skill_grid = [];
 
 document.addEventListener('WebComponentsReady', function() {
@@ -8,6 +8,7 @@ document.addEventListener('WebComponentsReady', function() {
     skill_points = document.querySelector("skill-points");
     skill_warning = document.querySelector('.skill-warning');
     skill_info = document.querySelector('skill-info');
+    level_input = document.querySelector('#level-input');
     var ajax = document.querySelector("polymer-ajax");
 
     try {
@@ -59,6 +60,12 @@ init_elements = function() {
         }
     }
 };
+
+level_reset = function() {
+    var last_job = model.job_byindx[model.job_byindx.length-1]
+    var level = parseInt(level_input.querySelector('.form-control').value);
+    window.location = sprintf('%s/%s.%s', url_base, new Array(60).join('-'), build_url.hash_job(last_job, char_level));
+}
 
 click = function(e) {
     e.preventDefault();

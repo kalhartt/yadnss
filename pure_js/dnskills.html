@@ -26,6 +26,13 @@
                 </polymer-ui-accordion>
             </div>
             <div class="col-md-4 col-md-pull-4">
+                <div class="panel input-group" id="level-input">
+                    <span class="input-group-addon">Level</span>
+                    <input class="form-control" type="text" placeholder="60"></input>
+                    <span class="input-group-btn">
+                    <input class="btn btn-default" type="button" onclick="level_reset();" value="Reset"></input>
+                    </span>
+                </div>
                 <skill-points></skill-points>
                 <div class="panel panel-default">
                     <div class="panel-heading">Warnings</div>
