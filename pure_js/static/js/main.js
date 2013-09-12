@@ -15,6 +15,7 @@ document.addEventListener('WebComponentsReady', function() {
         var url_pattern = new RegExp('^/[A-Za-z0-9\-_]{60}\.[A-Za-z0-9\-_]+$');
         if (!url_pattern.test(window.location.pathname)) { throw "Invalid build url"; }
         char_level = build_url.unhash_job(window.location.pathname).level;
+        level_input.querySelector('.form-control').value = char_level;
         json_url = window.location.pathname.slice(1);
     } catch (e) {
         char_level = 60;
@@ -24,7 +25,7 @@ document.addEventListener('WebComponentsReady', function() {
     ajax.url = json_base + json_url;
 
     ajax.addEventListener("polymer-response", function(e) {
-        model.parse(e.detail.response, 60);
+        model.parse(e.detail.response, char_level);
         init_elements();
     });
     ajax.go();
@@ -64,7 +65,8 @@ init_elements = function() {
 level_reset = function() {
     var last_job = model.job_byindx[model.job_byindx.length-1]
     var level = parseInt(level_input.querySelector('.form-control').value);
-    window.location = sprintf('%s/%s.%s', url_base, new Array(60).join('-'), build_url.hash_job(last_job, char_level));
+    level = level > 100 ? 100 : level;
+    window.location = sprintf('%s/%s.%s', url_base, new Array(61).join('-'), build_url.hash_job(last_job, level));
 }
 
 click = function(e) {
