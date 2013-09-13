@@ -15,6 +15,7 @@ var main = (function () {
 
     self.init_elements = function() {//{{{
         self.skill_points.set_labels(model.job_byindx);
+        self.level_input.querySelector('.btn').addEventListener('click', self.level_reset);
 
         var accordion = document.querySelector("polymer-ui-accordion");
         for (var n in model.job_byindx) {
@@ -44,7 +45,7 @@ var main = (function () {
         }
     };//}}}
 
-    self.level_reset = function() {//{{{
+    self.level_reset = function(e) {//{{{
         var last_job = model.job_byindx[model.job_byindx.length-1]
         var level = parseInt(self.level_input.querySelector('.form-control').value);
         level = level > 100 ? 100 : level;
@@ -122,11 +123,10 @@ var main = (function () {
     
     return self;
 })();
-console.log(self);
 
 document.addEventListener('WebComponentsReady', function() {//{{{
     main.url_base = window.location.origin;
-    main.json_base = 'http://localhost:8000/api/';
+    main.json_base = window.location.origin + '/api/';
     main.build_url = document.querySelector("build-url");
     main.skill_points = document.querySelector("skill-points");
     main.skill_warning = document.querySelector('.skill-warning');
