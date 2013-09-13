@@ -42,7 +42,7 @@ Polymer('build-url', {
             for (var i=0; i<24; i++){
                 try {
                     var skill = model.job_byindx[n].skill[i];
-                    var slevel = skill_grid[n].icon[skill.id].level;
+                    var slevel = main.skill_grid[n].icon[skill.id].level;
                 } catch (e) {
                     var slevel = 0;
                 }
