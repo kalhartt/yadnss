@@ -11,14 +11,14 @@ var main = (function () {
     self.json_url;
     self.level_input;
     self.skill_grid = [];
-    self.clip;
 
     self.init_elements = function() {//{{{
         self.skill_points.set_labels(model.job_byindx);
         self.level_input.querySelector('.btn').addEventListener('click', self.level_reset);
-        self.clip = new ZeroClipboard(document.querySelector('.build-url-copy'), {moviePath:'/static/swf/ZeroClipboard.swf'});
-        self.clip.on('dataRequested', function(client, args){ client.setText(self.build_url.value); });
         $('.build-url-copy').tooltip();
+        document.querySelector('.build-url-copy').addEventListener('click', function(){
+            self.build_url.shadowRoot.querySelector('input').select();
+        });
         $('.build-url-download').tooltip();
 
         var accordion = document.querySelector("polymer-ui-accordion");
@@ -61,7 +61,11 @@ var main = (function () {
         var skill = model.skill_byid[e.target.id];
         var icon = self.skill_grid[skill.job.index].icon[skill.id];
         if (skill.numlevel > icon.level) {
-            icon.update(icon.level+1);
+            if (e.shiftKey | e.ctrlKey){
+                icon.update(skill.numlevel);
+            } else {
+                icon.update(icon.level+1);
+            }
             self.skill_info.update(skill, icon.level);
             self.update();
         }
@@ -72,7 +76,11 @@ var main = (function () {
         var skill = model.skill_byid[e.target.id];
         var icon = self.skill_grid[skill.job.index].icon[skill.id];
         if (icon.level > 0) {
-            icon.update(icon.level-1);
+            if (e.shiftKey | e.ctrlKey){
+                icon.update(0);
+            } else {
+                icon.update(icon.level-1);
+            }
             self.skill_info.update(skill, icon.level);
             self.update();
         }

@@ -21,9 +21,19 @@ Polymer('skill-icon', {
 
     set_handle: function(click, context, hover){
         var img = this.shadowRoot.querySelector('img');
-        img.onclick = click;
-        img.oncontextmenu = context;
-        img.onmouseover = hover;
+        img.addEventListener('mousedown', function(e) {
+            switch (e.which){
+                case 1:
+                    click(e);
+                    break;
+                case 3:
+                    context(e);
+                    break;
+            }
+            return False;
+        });
+        img.addEventListener('contextmenu', function(e) {e.preventDefault();});
+        img.addEventListener('mouseover', hover);
     },
 
     update: function(level) {
