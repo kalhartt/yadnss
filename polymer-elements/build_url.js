@@ -4,6 +4,7 @@ Polymer('build-url', {
     created: function() {
         this.alphabet = {};
         this.alphabet_reverse = {};
+
         var n = 0;
         for (var i=45; i<123; i++) {
             if (i == 46){ i = 48; }
@@ -14,6 +15,7 @@ Polymer('build-url', {
             this.alphabet_reverse[String.fromCharCode(i)] = n;
             n++;
         }
+
     },
 
     hash: function(num, len) {

@@ -11,11 +11,15 @@ var main = (function () {
     self.json_url;
     self.level_input;
     self.skill_grid = [];
-
+    self.clip;
 
     self.init_elements = function() {//{{{
         self.skill_points.set_labels(model.job_byindx);
         self.level_input.querySelector('.btn').addEventListener('click', self.level_reset);
+        self.clip = new ZeroClipboard(document.querySelector('.build-url-copy'), {moviePath:'/static/swf/ZeroClipboard.swf'});
+        self.clip.on('dataRequested', function(client, args){ client.setText(self.build_url.value); });
+        $('.build-url-copy').tooltip();
+        $('.build-url-download').tooltip();
 
         var accordion = document.querySelector("polymer-ui-accordion");
         for (var n in model.job_byindx) {
