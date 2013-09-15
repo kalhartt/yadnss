@@ -1,6 +1,5 @@
-packages
-pubspec.lock
-out
-deploy
-.buildlog
 img
+templates
+collapse.js
+dropdown.js
+jquery.js

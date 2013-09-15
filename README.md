@@ -1,7 +1,7 @@
 dnskills
 ========
 
-DragonNest skill simulator built with dart-polymer
+DragonNest skill simulator built with polymer
 
 Attributions
 ------------
