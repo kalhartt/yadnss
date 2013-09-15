@@ -57,7 +57,6 @@ var main = (function () {
     }//}}}
 
     self.click = function(e) {//{{{
-        e.preventDefault();
         var skill = model.skill_byid[e.target.id];
         var icon = self.skill_grid[skill.job.index].icon[skill.id];
         if (skill.numlevel > icon.level) {
@@ -72,7 +71,6 @@ var main = (function () {
     }//}}}
 
     self.context = function(e) {//{{{
-        e.preventDefault();
         var skill = model.skill_byid[e.target.id];
         var icon = self.skill_grid[skill.job.index].icon[skill.id];
         if (icon.level > 0) {
