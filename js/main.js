@@ -128,7 +128,11 @@ var main = (function () {
         }
         
         var last_job = model.job_byindx[model.job_byindx.length-1]
-        self.build_url.value = sprintf('%s/%s.%s', self.url_base, self.build_url.hash_build(), self.build_url.hash_job(last_job, self.char_level));
+        var build_hash = self.build_url.hash_build();
+        var job_hash = self.build_url.hash_job(last_job, self.char_level);
+        self.build_url.value = sprintf('%s/%s.%s', self.url_base, build_hash, job_hash);
+        document.querySelector('.a-portrait').setAttribute('href', sprintf('%s/portrait/%s.%s', self.url_base, build_hash, job_hash));
+        document.querySelector('.a-landscape').setAttribute('href', sprintf('%s/landscape/%s.%s', self.url_base, build_hash, job_hash));
     }//}}}
     
     return self;
@@ -155,6 +159,8 @@ document.addEventListener('WebComponentsReady', function() {//{{{
         main.json_url = '------------------------------------------------------------.w9'
     }
     main.build_url.value = main.url_base + '/' + main.json_url;
+    document.querySelector('.a-portrait').setAttribute('href', sprintf('%s/portrait/%s', main.url_base, main.json_url));
+    document.querySelector('.a-landscape').setAttribute('href', sprintf('%s/landscape/%s', main.url_base, main.json_url));
     ajax.url = main.json_base + main.json_url;
 
     ajax.addEventListener("polymer-response", function(e) {
