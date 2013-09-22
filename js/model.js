@@ -20,6 +20,7 @@ var model = (function () {
         this.index = 0;
         this.level = {};
         this.numlevel = 0;
+        this.ultimate = false;
     };//}}}
 
     self.SkillLevel = function() {//{{{
@@ -38,28 +39,30 @@ var model = (function () {
     self.skill_byid = {};
     self.slevel_byid = {};
 
-    self.parse =function(response, char_level) {
+    self.parse =function(response, char_level) {//{{{
         console.debug("model.parse - enter");
         var description = {};
         var parent = [];
 
-        var parse_job = function(obj) {
+        var parse_job = function(obj) {//{{{
             console.debug("model.parse.parse_job - enter");
             var job = new self.Job();
             job.id = obj.pk;
             job.name = obj.fields.name;
-            job.parent = obj.fields.parent == null ? null : self.job_byid[obj.fields.parent];
+            job.index = obj.fields.number;
+            // assumes jobs are sent __in_order__
+            job.parent = obj.fields.parent === null ? null : self.job_byid[obj.fields.parent];
             
             self.job_byid[job.id] = job;
-            self.job_byindx.push(job);
+            self.job_byindx[job.index] = job;
             console.debug("model.parse.parse_job - exit");
-        }
+        };//}}}
 
-        var parse_skill = function(obj) {
+        var parse_skill = function(obj) {//{{{
             console.debug("model.parse.parse_skill - enter");
             description[obj.pk] = obj.fields.description;
             for (var n=1; n<4; n++) {
-                if (obj.fields['parent_'+n] != null) { parent.push({ 'skill': obj.pk, 'slevel':obj.fields['parent_'+n] }); }
+                if (obj.fields['parent_'+n] !== null) { parent.push({ 'skill': obj.pk, 'slevel':obj.fields['parent_'+n] }); }
             }
             var skill = new self.Skill();
             skill.id = obj.pk;
@@ -67,6 +70,7 @@ var model = (function () {
             skill.name = obj.fields.name;
             skill.icon = obj.fields.icon;
             skill.index = obj.fields.tree_index;
+            skill.ultimate = obj.fields.ultimate;
             for (n=0; obj.fields.hasOwnProperty('sp_required_'+n); n++) {
                 skill.req_sp.push(obj.fields['sp_required_'+n]);
             }
@@ -75,9 +79,9 @@ var model = (function () {
             skill.job.numskill += 1;
             self.skill_byid[skill.id] = skill;
             console.debug("model.parse.parse_skill - exit");
-        }
+        };//}}}
 
-        var parse_slevel = function(obj, char_level) {
+        var parse_slevel = function(obj, char_level) {//{{{
             console.debug("model.parse.parse_slevel - enter");
             var slevel = new self.SkillLevel();
             var pve_description = description[obj.fields.skill];
@@ -102,9 +106,9 @@ var model = (function () {
             if (slevel.req_level <= char_level) { slevel.skill.numlevel += 1; }
             self.slevel_byid[slevel.id] = slevel;
             console.debug("model.parse.parse_slevel - exit");
-        }
+        };//}}}
 
-        for (var n in response) {
+        for (n in response) {
             var obj = response[n];
             switch (obj.model) {
                 case "skills.job":
@@ -113,18 +117,18 @@ var model = (function () {
                     parse_skill(obj); break;
                 case "skills.skilllevel":
                     parse_slevel(obj, char_level); break;
+                default:
+                    break;
             }
         }
 
-        for (var n in parent) {
+        for (n in parent) {
             var skill = self.skill_byid[parent[n].skill];
             skill.req_slevel.push(self.slevel_byid[parent[n].slevel]);
         }
 
-        self.job_byindx.sort(function(a,b) { return a.id-b.id; });
-        for (n in self.job_byindx) { self.job_byindx[n].index = n; }
         console.debug("model.parse - exit");
-    };
+    };//}}}
     
     return self;
 })();
