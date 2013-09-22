@@ -111,32 +111,6 @@ var main = (function () {
         self.skill_grid.forEach(function(e) { slevels = slevels.concat(e.get_slevels()); });
         self.skill_points.calc_sp(slevels);
 
-        console.debug('Validate Total SP Limit');
-        var req_jobsp = [];
-        var req_skill = [];
-        if (self.skill_points.sp_used[self.skill_points.sp_used.length-1] > self.skill_points.sp_limit[self.skill_points.sp_used.length-1]){
-            self.skill_warning.innerHTML += sprintf('<li>%s</li>', 'Total SP limit exceeded');
-        }
-
-        console.debug('Validate Job SP Limits');
-        for (n in model.job_byindx) {
-            if (self.skill_points.sp_used[n] > self.skill_points.sp_limit[n]){
-                self.skill_warning.innerHTML += sprintf('<li>%s SP limit exceeded</li>', model.job_byindx[n].name);
-            }
-        }
-
-        console.debug('Build Skill requisite list');
-        for (n in slevels) {
-            if (slevels[n].skill.ultimate) { continue; }
-            for (i in slevels[n].skill.req_slevel){
-                req = {
-                    'skill': slevels[n].skill,
-                    'req': slevels[n].skill.req_slevel[i]
-                };
-                requisites.push(req);
-            }
-        }
-
         // returns true if item satisfies req
         // item and req are model.SkillLevel objects
         flt = function(item, req) {
@@ -145,7 +119,34 @@ var main = (function () {
             return true;
         };
 
-        console.debug('Validate Skills');
+        console.debug('Validate Total SP Limit');//{{{
+        var req_jobsp = [];
+        var req_skill = [];
+        if (self.skill_points.sp_used[self.skill_points.sp_used.length-1] > self.skill_points.sp_limit[self.skill_points.sp_used.length-1]){
+            self.skill_warning.innerHTML += sprintf('<li>%s</li>', 'Total SP limit exceeded');
+        }//}}}
+
+        console.debug('Validate Job SP Limits');//{{{
+        for (n in model.job_byindx) {
+            if (self.skill_points.sp_used[n] > self.skill_points.sp_limit[n]){
+                self.skill_warning.innerHTML += sprintf('<li>%s SP limit exceeded</li>', model.job_byindx[n].name);
+            }
+        }//}}}
+
+        console.debug('Build Skill requisite list');//{{{
+        for (n in slevels) {
+            if (slevels[n].skill.ultimate) { continue; }
+            for (i in slevels[n].skill.req_slevel){
+                if (slevels[n].skill.req_slevel[i].sp_cost_cumulative === 0) { continue; }
+                req = {
+                    'skill': slevels[n].skill,
+                    'req': slevels[n].skill.req_slevel[i]
+                };
+                requisites.push(req);
+            }
+        }//}}}
+
+        console.debug('Validate Skills');//{{{
         for (n in slevels) {
             slevel = slevels[n];
             
@@ -165,9 +166,9 @@ var main = (function () {
         }
         requisites.forEach(function(req) {
             self.skill_warning.innerHTML += sprintf('<li>%s level %d required for %s</li>', req.req.skill.name, req.req.level, req.skill.name);
-        });
+        });//}}}
 
-        console.debug('Validate Ultimates');
+        console.debug('Validate Ultimates');//{{{
         ultimates = slevels.filter(function(item) { return item.skill.ultimate; });
         var valid = ultimates.some(function(item) {
             // only need to validate one ultimate
@@ -184,14 +185,16 @@ var main = (function () {
                     self.skill_warning.innerHTML += sprintf('<li>%s level %d required for %s</li>', req.skill.name, req.level, ult.skill.name);
                 });
             });
-        }
- 
+        }//}}}
+
+        console.debug('Update Build URL');//{{{
         var last_job = model.job_byindx[model.job_byindx.length-1];
         var build_hash = self.build_url.hash_build();
         var job_hash = self.build_url.hash_job(last_job, self.char_level);
         self.build_url.value = sprintf('%s/%s.%s', self.url_base, build_hash, job_hash);
         document.querySelector('.a-portrait').setAttribute('href', sprintf('%s/portrait/%s.%s', self.url_base, build_hash, job_hash));
-        document.querySelector('.a-landscape').setAttribute('href', sprintf('%s/landscape/%s.%s', self.url_base, build_hash, job_hash));
+        document.querySelector('.a-landscape').setAttribute('href', sprintf('%s/landscape/%s.%s', self.url_base, build_hash, job_hash));//}}}
+
         console.debug("main - update - exit");
     };//}}}
  
