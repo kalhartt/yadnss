@@ -1,7 +1,8 @@
 Polymer('build-url', {
     value: '',
 
-    created: function() {
+    created: function() {//{{{
+        console.debug("build-url.created - enter");
         this.alphabet = {};
         this.alphabet_reverse = {};
 
@@ -15,28 +16,33 @@ Polymer('build-url', {
             this.alphabet_reverse[String.fromCharCode(i)] = n;
             n++;
         }
+        console.debug("build-url.created - exit");
+    },//}}}
 
-    },
-
-    hash: function(num, len) {
+    hash: function(num, len) {//{{{
+        console.debug("build-url.hash - enter");
         var result = '';
         while (num != 0) {
             result += this.alphabet[num&63];
             num = num>>6;
         }
         if (result.length < len) { result = result + new Array(1+len-result.length).join(this.alphabet[0]) }
+        console.debug("build-url.hash - exit");
         return result;
-    },
+    },//}}}
 
-    unhash: function(msg) {
+    unhash: function(msg) {//{{{
+        console.debug("build-url.unhash - enter");
         var result = 0;
         for (var n=msg.length-1; n>=0; n--) {
             result = (result<<6) | this.alphabet_reverse[msg[n]];
         }
+        console.debug("build-url.unhash - exit");
         return result;
-    },
+    },//}}}
 
-    hash_build: function() {
+    hash_build: function() {//{{{
+        console.debug("build-url.hash_build - enter");
         var result = '';
         var tmp = 0;
         var tmp_count = 0;
@@ -57,14 +63,19 @@ Polymer('build-url', {
                 }
             }
         }
+        console.debug("build-url.hash_build - exit");
         return result;
-    },
+    },//}}}
 
-    hash_job: function(job, level) {
-        return this.hash(job.id<<7|level);
-    },
+    hash_job: function(job, level) {//{{{
+        console.debug("build-url.hash_job - enter");
+        var hash = this.hash(job.id<<7|level);
+        console.debug("build-url.hash_job - exit");
+        return hash; 
+    },//}}}
 
-    unhash_build: function(msg) {
+    unhash_build: function(msg) {//{{{
+        console.debug("build-url.unhash_build - enter");
         var msg = msg.split('.')[0];
         var result = {};
         var num = 0;
@@ -80,12 +91,16 @@ Polymer('build-url', {
                 count++;
             }
         }
+        console.debug("build-url.unhash_build - exit");
         return result;
-    },
+    },//}}}
 
-    unhash_job: function(msg) {
+    unhash_job: function(msg) {//{{{
+        console.debug("build-url.unhash_job - enter");
         var msg = this.unhash(msg.split('.')[1]);
-        return { 'job':msg>>7 , 'level':msg&127 };
-    },
+        var result = { 'job':msg>>7 , 'level':msg&127 };
+        console.debug("build-url.unhash_job - exit");
+        return result;
+    },//}}}
 
 });

@@ -2,7 +2,8 @@ Polymer('skill-points', {
     sp_limit: [104, 107, 104, 167],
     sp_used: [0, 0, 0, 0],
 
-    set_labels: function(jobs) {
+    set_labels: function(jobs) {//{{{
+        console.debug("skill-points - set_labels - enter");
         var body = this.shadowRoot.querySelector('.panel-body');
         body.innerHTML = '';
         for (var n in jobs) {
@@ -10,9 +11,11 @@ Polymer('skill-points', {
         }
         this.shadowRoot.querySelector('.sp-badge-total').className = "badge pull-right sp-badge-total sp-badge-" + jobs.length;
         this.calc_sp([]);
-    },
+        console.debug("skill-points - set_labels - exit");
+    },//}}}
 
-    calc_sp: function(slevels) {
+    calc_sp: function(slevels) {//{{{
+        console.debug("skill-points - calc_sp - enter");
         this.sp_used = [];
         for (var n=0; n < this.sp_limit.length; n++) { this.sp_used[n] = 0; }
         for (var n in slevels) {
@@ -29,10 +32,14 @@ Polymer('skill-points', {
                 badge.className = "badge pull-right sp-badge-" + n;
             }
         }
-    },
+        console.debug("skill-points - calc_sp - exit");
+    },//}}}
 
-    clear: function() {
+    clear: function() {//{{{
+        console.debug("skill-points - clear - enter");
         for (var n=0; n < this.sp_used.length; n++) { this.sp_used[n] = 0; }
         this.calc_sp([]);
-    }
+        console.debug("skill-points - clear - exit");
+    }//}}}
+
 });

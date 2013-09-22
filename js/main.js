@@ -13,6 +13,7 @@ var main = (function () {
     self.skill_grid = [];
 
     self.init_elements = function() {//{{{
+        console.debug("main - init_elements - enter");
         self.skill_points.set_labels(model.job_byindx);
         self.level_input.querySelector('.btn').addEventListener('click', self.level_reset);
         $('.build-url-copy').tooltip();
@@ -47,16 +48,20 @@ var main = (function () {
                self.skill_grid[model.skill_byid[skill_id].job.index].icon[skill_id].update(level);
             }
         }
+        console.debug("main - init_elements - exit");
     };//}}}
 
     self.level_reset = function(e) {//{{{
+        console.debug("main - level_reset - enter");
         var last_job = model.job_byindx[model.job_byindx.length-1]
         var level = parseInt(self.level_input.querySelector('.form-control').value);
         level = level > 100 ? 100 : level;
         window.location = sprintf('%s/%s.%s', self.url_base, new Array(61).join('-'), self.build_url.hash_job(last_job, level));
+        console.debug("main - level_reset - exit");
     }//}}}
 
     self.click = function(e) {//{{{
+        console.debug("main - click - enter");
         var skill = model.skill_byid[e.target.id];
         var icon = self.skill_grid[skill.job.index].icon[skill.id];
         if (skill.numlevel > icon.level) {
@@ -68,9 +73,11 @@ var main = (function () {
             self.skill_info.update(skill, icon.level);
             self.update();
         }
+        console.debug("main - click - exit");
     }//}}}
 
     self.context = function(e) {//{{{
+        console.debug("main - context - enter");
         var skill = model.skill_byid[e.target.id];
         var icon = self.skill_grid[skill.job.index].icon[skill.id];
         if (icon.level > 0) {
@@ -82,16 +89,20 @@ var main = (function () {
             self.skill_info.update(skill, icon.level);
             self.update();
         }
+        console.debug("main - context - ");
     }//}}}
 
     self.hover = function(e) {//{{{
+        console.debug("main - hover - enter");
         e.preventDefault();
         var skill = model.skill_byid[e.target.id];
         var icon = self.skill_grid[skill.job.index].icon[skill.id];
         self.skill_info.update(skill, icon.level);
+        console.debug("main - hover - exit");
     }//}}}
 
     self.update = function() {//{{{
+        console.debug("main - update - enter");
         var slevels = [];
         self.skill_warning.innerHTML = '';
         self.skill_grid.forEach(function(e) { slevels = slevels.concat(e.get_slevels()); })
@@ -133,12 +144,14 @@ var main = (function () {
         self.build_url.value = sprintf('%s/%s.%s', self.url_base, build_hash, job_hash);
         document.querySelector('.a-portrait').setAttribute('href', sprintf('%s/portrait/%s.%s', self.url_base, build_hash, job_hash));
         document.querySelector('.a-landscape').setAttribute('href', sprintf('%s/landscape/%s.%s', self.url_base, build_hash, job_hash));
+        console.debug("main - update - exit");
     }//}}}
     
     return self;
 })();
 
 document.addEventListener('WebComponentsReady', function() {//{{{
+    console.debug("Event - WebComponentsReady - enter");
     main.url_base = window.location.origin;
     main.json_base = window.location.origin + '/api/';
     main.build_url = document.querySelector("build-url");
@@ -156,7 +169,7 @@ document.addEventListener('WebComponentsReady', function() {//{{{
         main.json_url = window.location.pathname.slice(1);
     } catch (e) {
         main.char_level = 60;
-        main.json_url = '------------------------------------------------------------.w9'
+        main.json_url = '------------------------------------------------------------.ws7'
     }
     main.build_url.value = main.url_base + '/' + main.json_url;
     document.querySelector('.a-portrait').setAttribute('href', sprintf('%s/portrait/%s', main.url_base, main.json_url));
@@ -168,4 +181,5 @@ document.addEventListener('WebComponentsReady', function() {//{{{
         main.init_elements();
     });
     ajax.go();
+    console.debug("Event - WebComponentsReady - exit");
 });//}}}

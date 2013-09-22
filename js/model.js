@@ -1,16 +1,16 @@
 var model = (function () {
     var self = {};
     
-    self.Job = function() {
+    self.Job = function() {//{{{
         this.id = 0;
         this.index = 0;
         this.name = '';
         this.parent = null;
         this.skill = {};
         this.numskill = 0;
-    };
+    };//}}}
 
-    self.Skill = function() {
+    self.Skill = function() {//{{{
         this.id = 0;
         this.job = null;
         this.name = '';
@@ -20,9 +20,9 @@ var model = (function () {
         this.index = 0;
         this.level = {};
         this.numlevel = 0;
-    };
+    };//}}}
 
-    self.SkillLevel = function() {
+    self.SkillLevel = function() {//{{{
         this.id = 0;
         this.level = 0;
         this.description_pve = '';
@@ -31,7 +31,7 @@ var model = (function () {
         this.skill = null;
         this.sp_cost = 0;
         this.sp_cost_cumulative = 0;
-    };
+    };//}}}
     
     self.job_byid = {};
     self.job_byindx = [];
@@ -39,10 +39,12 @@ var model = (function () {
     self.slevel_byid = {};
 
     self.parse =function(response, char_level) {
+        console.debug("model.parse - enter");
         var description = {};
         var parent = [];
 
         var parse_job = function(obj) {
+            console.debug("model.parse.parse_job - enter");
             var job = new self.Job();
             job.id = obj.pk;
             job.name = obj.fields.name;
@@ -50,9 +52,11 @@ var model = (function () {
             
             self.job_byid[job.id] = job;
             self.job_byindx.push(job);
+            console.debug("model.parse.parse_job - exit");
         }
 
         var parse_skill = function(obj) {
+            console.debug("model.parse.parse_skill - enter");
             description[obj.pk] = obj.fields.description;
             for (var n=1; n<4; n++) {
                 if (obj.fields['parent_'+n] != null) { parent.push({ 'skill': obj.pk, 'slevel':obj.fields['parent_'+n] }); }
@@ -70,9 +74,11 @@ var model = (function () {
             skill.job.skill[skill.index] = skill;
             skill.job.numskill += 1;
             self.skill_byid[skill.id] = skill;
+            console.debug("model.parse.parse_skill - exit");
         }
 
         var parse_slevel = function(obj, char_level) {
+            console.debug("model.parse.parse_slevel - enter");
             var slevel = new self.SkillLevel();
             var pve_description = description[obj.fields.skill];
             var pvp_description = description[obj.fields.skill];
@@ -95,6 +101,7 @@ var model = (function () {
             slevel.skill.level[slevel.level] = slevel;
             if (slevel.req_level <= char_level) { slevel.skill.numlevel += 1; }
             self.slevel_byid[slevel.id] = slevel;
+            console.debug("model.parse.parse_slevel - exit");
         }
 
         for (var n in response) {
@@ -116,6 +123,7 @@ var model = (function () {
 
         self.job_byindx.sort(function(a,b) { return a.id-b.id; });
         for (n in self.job_byindx) { self.job_byindx[n].index = n; }
+        console.debug("model.parse - exit");
     };
     
     return self;
