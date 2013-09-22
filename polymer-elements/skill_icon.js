@@ -39,6 +39,8 @@ Polymer('skill-icon', {
                 case 3:
                     context(e);
                     break;
+                default:
+                    break;
             }
             return false;
         });
@@ -48,11 +50,11 @@ Polymer('skill-icon', {
     },//}}}
 
     update: function(level) {//{{{
-        console.log("skill-icon.update - enter");
+        console.debug("skill-icon.update - enter");
         this.level = level;
         if (this.level > 0) { this.set_hi(); } else { this.set_lo(); }
         this.shadowRoot.querySelector('span').innerHTML = sprintf('%d/%d', level, this.skill.numlevel);
-        console.log("skill-icon.update - exit");
+        console.debug("skill-icon.update - exit");
     }//}}}
 
 });

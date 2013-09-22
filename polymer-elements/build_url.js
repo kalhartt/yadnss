@@ -22,11 +22,13 @@ Polymer('build-url', {
     hash: function(num, len) {//{{{
         console.debug("build-url.hash - enter");
         var result = '';
-        while (num != 0) {
+        while (num !== 0) {
             result += this.alphabet[num&63];
             num = num>>6;
         }
-        if (result.length < len) { result = result + new Array(1+len-result.length).join(this.alphabet[0]) }
+        if (result.length < len) { 
+            result = result + new Array(1+len-result.length).join(this.alphabet[0]);
+        }
         console.debug("build-url.hash - exit");
         return result;
     },//}}}
@@ -43,16 +45,17 @@ Polymer('build-url', {
 
     hash_build: function() {//{{{
         console.debug("build-url.hash_build - enter");
+        var n, i, slevel, skill;
         var result = '';
         var tmp = 0;
         var tmp_count = 0;
-        for (var n in model.job_byindx){
-            for (var i=0; i<24; i++){
+        for (n in model.job_byindx){
+            for (i=0; i<24; i++){
                 try {
-                    var skill = model.job_byindx[n].skill[i];
-                    var slevel = main.skill_grid[n].icon[skill.id].level;
+                    skill = model.job_byindx[n].skill[i];
+                    slevel = main.skill_grid[n].icon[skill.id].level;
                 } catch (e) {
-                    var slevel = 0;
+                    slevel = 0;
                 }
                 tmp = (tmp<<5)|slevel;
                 tmp_count++;
@@ -71,18 +74,18 @@ Polymer('build-url', {
         console.debug("build-url.hash_job - enter");
         var hash = this.hash(job.id<<7|level);
         console.debug("build-url.hash_job - exit");
-        return hash; 
+        return hash;
     },//}}}
 
-    unhash_build: function(msg) {//{{{
+    unhash_build: function(message) {//{{{
         console.debug("build-url.unhash_build - enter");
-        var msg = msg.split('.')[0];
+        var msg = message.split('.')[0];
         var result = {};
         var num = 0;
         var count = 0;
         for (var n in model.job_byindx){
             for (var i=0; i<24; i++) {
-                if (count%6 == 0) {
+                if (count%6 === 0) {
                     num = this.unhash(msg.slice(0,5));
                     msg = msg.slice(5);
                 }
@@ -95,12 +98,12 @@ Polymer('build-url', {
         return result;
     },//}}}
 
-    unhash_job: function(msg) {//{{{
+    unhash_job: function(message) {//{{{
         console.debug("build-url.unhash_job - enter");
-        var msg = this.unhash(msg.split('.')[1]);
+        var msg = this.unhash(message.split('.')[1]);
         var result = { 'job':msg>>7 , 'level':msg&127 };
         console.debug("build-url.unhash_job - exit");
         return result;
-    },//}}}
+    }//}}}
 
 });

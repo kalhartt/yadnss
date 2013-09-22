@@ -12,19 +12,24 @@ Polymer('skill-info', {
         'reqlevel': '<p><span class="info-orange">Req Level: </span><span class="info-default">%d</span></p>',
         'reqskill': '<p><span class="info-orange">Req Skill: </span><span class="info-default">%s level %d</span></p>',
         'description': '<p><span class="info-default">%s</span></p>'
-    }
+    },
 
     get_description: function(slevel) {//{{{
         console.debug('skill-info.get_description - enter');
-        var description;
+        var description, rep;
         if (this.pve) {
-            description = sprintf(this.uistring['description'], slevel.description_pve.replace(/\\n/g, '<br>'));
+            rep = slevel.description_pve.replace(/\\n/g, '<br>');
+            description = sprintf(this.uistring['description'], rep);
         } else {
-            description = sprintf(this.uistring['description'], slevel.description_pvp.replace(/\\n/g, '<br>'));
+            rep = slevel.description_pve.replace(/\\n/g, '<br>');
+            description = sprintf(this.uistring['description'], rep);
         }
-        for (key in this.color_codes) { description = description.replace(new RegExp(key, 'g'), this.color_codes[key]); }
-        return description;
+        for (key in this.color_codes) {
+            console.debug(key);
+            description = description.replace(new RegExp(key, 'g'), this.color_codes[key]);
+        }
         console.debug('skill-info.get_description - exit');
+        return description;
     },//}}}
 
     toggle: function() {//{{{
@@ -41,14 +46,14 @@ Polymer('skill-info', {
 
     update: function(skill, level) {//{{{
         console.debug("skill-info.update - enter");
-        if (skill == null) { return; }
+        if (skill === null) { return; }
         this.skill = skill;
         this.level = level;
         var body = this.shadowRoot.querySelector('.panel-body');
         slevel = [skill.level[level], skill.level[level+1]];
 
         body.innerHTML = sprintf(this.uistring['name'], skill.name) + sprintf(this.uistring['level'], level);
-        if (slevel[1] != null) {
+        if (slevel[1] !== undefined) {
             body.innerHTML += sprintf(this.uistring['cost'], slevel[1].sp_cost);
             body.innerHTML += sprintf(this.uistring['reqlevel'], slevel[1].req_level);
             for (n in slevel[1].skill.req_slevel) {
@@ -56,8 +61,8 @@ Polymer('skill-info', {
             }
         }
         body.innerHTML += '<hr>';
-        if (slevel[0] != null) { body.innerHTML += this.uistring['current']  + this.get_description(slevel[0]); }
-        if (slevel[1] != null) { body.innerHTML += this.uistring['next'] + this.get_description(slevel[1]); }
+        if (slevel[0] !== undefined) { body.innerHTML += this.uistring['current']  + this.get_description(slevel[0]); }
+        if (slevel[1] !== undefined) { body.innerHTML += this.uistring['next'] + this.get_description(slevel[1]); }
         console.debug("skill-info.update - exit");
     },//}}}
 
@@ -65,6 +70,6 @@ Polymer('skill-info', {
         console.debug("skill-info.clear - enter");
         this.shadowRoot.querySelector('.panel-body').innerHTML = '';
         console.debug("skill-info.clear - exit");
-    },//}}}
+    }//}}}
 
 });

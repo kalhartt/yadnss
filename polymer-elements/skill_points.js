@@ -15,15 +15,16 @@ Polymer('skill-points', {
     },//}}}
 
     calc_sp: function(slevels) {//{{{
+        var n;
         console.debug("skill-points - calc_sp - enter");
         this.sp_used = [];
-        for (var n=0; n < this.sp_limit.length; n++) { this.sp_used[n] = 0; }
-        for (var n in slevels) {
+        for (n=0; n < this.sp_limit.length; n++) { this.sp_used[n] = 0; }
+        for (n in slevels) {
             slevel = slevels[n];
             this.sp_used[slevel.skill.job.index] += slevel.sp_cost_cumulative;
             this.sp_used[this.sp_used.length-1] += slevel.sp_cost_cumulative;
         }
-        for (var n=0; n < this.sp_limit.length; n++) {
+        for (n=0; n < this.sp_limit.length; n++) {
             var badge = this.shadowRoot.querySelector('.sp-badge-'+n);
             badge.innerHTML = this.sp_used[n] + '/' + this.sp_limit[n];
             if (this.sp_used[n] > this.sp_limit[n]) {

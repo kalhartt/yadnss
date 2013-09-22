@@ -30,7 +30,7 @@ Polymer('skill-grid', {
         console.debug("skill-grid.get_slevels - enter");
         var result = [];
         for (var n in this.icon) {
-            if (this.icon[n].level == 0) { continue; }
+            if (this.icon[n].level === 0) { continue; }
             result.push(this.icon[n].skill.level[this.icon[n].level]);
         }
         console.debug("skill-grid.get_slevels - exit");
