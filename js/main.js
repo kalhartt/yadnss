@@ -53,12 +53,12 @@ var main = (function () {
 
     self.level_reset = function(e) {//{{{
         console.debug("main - level_reset - enter");
-        var last_job = model.job_byindx[model.job_byindx.length-1]
-        var level = parseInt(self.level_input.querySelector('.form-control').value);
+        var last_job = model.job_byindx[model.job_byindx.length-1];
+        var level = parseInt(self.level_input.querySelector('.form-control').value, 10);
         level = level > 100 ? 100 : level;
         window.location = sprintf('%s/%s.%s', self.url_base, new Array(61).join('-'), self.build_url.hash_job(last_job, level));
         console.debug("main - level_reset - exit");
-    }//}}}
+    };//}}}
 
     self.click = function(e) {//{{{
         console.debug("main - click - enter");
@@ -74,7 +74,7 @@ var main = (function () {
             self.update();
         }
         console.debug("main - click - exit");
-    }//}}}
+    };//}}}
 
     self.context = function(e) {//{{{
         console.debug("main - context - enter");
@@ -89,8 +89,8 @@ var main = (function () {
             self.skill_info.update(skill, icon.level);
             self.update();
         }
-        console.debug("main - context - ");
-    }//}}}
+        console.debug("main - context - exit");
+    };//}}}
 
     self.hover = function(e) {//{{{
         console.debug("main - hover - enter");
@@ -99,54 +99,102 @@ var main = (function () {
         var icon = self.skill_grid[skill.job.index].icon[skill.id];
         self.skill_info.update(skill, icon.level);
         console.debug("main - hover - exit");
-    }//}}}
+    };//}}}
 
     self.update = function() {//{{{
         console.debug("main - update - enter");
+        var n, i, req, flt, job, skill, slevel, icon;
         var slevels = [];
+        var requisites = [];
+        var ultimates;
         self.skill_warning.innerHTML = '';
-        self.skill_grid.forEach(function(e) { slevels = slevels.concat(e.get_slevels()); })
+        self.skill_grid.forEach(function(e) { slevels = slevels.concat(e.get_slevels()); });
         self.skill_points.calc_sp(slevels);
 
+        console.debug('Validate Total SP Limit');
         var req_jobsp = [];
         var req_skill = [];
         if (self.skill_points.sp_used[self.skill_points.sp_used.length-1] > self.skill_points.sp_limit[self.skill_points.sp_used.length-1]){
             self.skill_warning.innerHTML += sprintf('<li>%s</li>', 'Total SP limit exceeded');
         }
 
-        for (var n in model.job_byindx) {
-            if (self.skill_points.sp_used[n] > self.skill_points.sp_limit[n]){ 
+        console.debug('Validate Job SP Limits');
+        for (n in model.job_byindx) {
+            if (self.skill_points.sp_used[n] > self.skill_points.sp_limit[n]){
                 self.skill_warning.innerHTML += sprintf('<li>%s SP limit exceeded</li>', model.job_byindx[n].name);
             }
         }
 
-        for (var n in slevels) {
-            var slevel = slevels[n];
+        console.debug('Build Skill requisite list');
+        for (n in slevels) {
+            if (slevels[n].skill.ultimate) { continue; }
+            for (i in slevels[n].skill.req_slevel){
+                req = {
+                    'skill': slevels[n].skill,
+                    'req': slevels[n].skill.req_slevel[i]
+                };
+                requisites.push(req);
+            }
+        }
 
-            for (var i in model.job_byindx){
-                var job = model.job_byindx[i]
+        // returns true if item satisfies req
+        // item and req are model.SkillLevel objects
+        flt = function(item, req) {
+            if (item.skill.id != req.skill.id) {return false;}
+            if (req.level > item.level) {return false;}
+            return true;
+        };
+
+        console.debug('Validate Skills');
+        for (n in slevels) {
+            slevel = slevels[n];
+            
+            // remove satisfied requisites
+            requisites = requisites.filter(function(item) {
+                return !flt(slevel, item.req);
+            });
+            
+            // Validate Class SP Requirements
+            for (i in model.job_byindx){
+                job = model.job_byindx[i];
                 if (self.skill_points.sp_used[i] < slevel.skill.req_sp[i]){
                     self.skill_warning.innerHTML += sprintf('<li>%s SP total >= %d required for %s</li>', job.name, slevel.skill.req_sp[i], slevel.skill.name);
                 }
             }
-            for (var i in slevel.skill.req_slevel){
-                var req_slevel = slevel.skill.req_slevel[i];
-                var found = false;
-                for (j in slevels) { if (slevels[j].skill == req_slevel.skill && slevels[j].level >= req_slevel.level) { found = true; break; }}
-                if (found) {continue;}
-                self.skill_warning.innerHTML += sprintf('<li>%s level %d required for %s</li>', req_slevel.skill.name, req_slevel.level, slevel.skill.name);
-            }
+
         }
-        
-        var last_job = model.job_byindx[model.job_byindx.length-1]
+        requisites.forEach(function(req) {
+            self.skill_warning.innerHTML += sprintf('<li>%s level %d required for %s</li>', req.req.skill.name, req.req.level, req.skill.name);
+        });
+
+        console.debug('Validate Ultimates');
+        ultimates = slevels.filter(function(item) { return item.skill.ultimate; });
+        var valid = ultimates.some(function(item) {
+            // only need to validate one ultimate
+            // but validate every requirement of that ultimate
+            return item.skill.req_slevel.every(function(sitem) {
+                icon = main.skill_grid[sitem.skill.job.index].icon[sitem.skill.id];
+                return icon.level >= sitem.level;
+            });
+        });
+        if (!valid) {
+            console.info(ultimates, valid);
+            ultimates.forEach(function(ult) {
+                ult.skill.req_slevel.forEach(function(req) {
+                    self.skill_warning.innerHTML += sprintf('<li>%s level %d required for %s</li>', req.skill.name, req.level, ult.skill.name);
+                });
+            });
+        }
+ 
+        var last_job = model.job_byindx[model.job_byindx.length-1];
         var build_hash = self.build_url.hash_build();
         var job_hash = self.build_url.hash_job(last_job, self.char_level);
         self.build_url.value = sprintf('%s/%s.%s', self.url_base, build_hash, job_hash);
         document.querySelector('.a-portrait').setAttribute('href', sprintf('%s/portrait/%s.%s', self.url_base, build_hash, job_hash));
         document.querySelector('.a-landscape').setAttribute('href', sprintf('%s/landscape/%s.%s', self.url_base, build_hash, job_hash));
         console.debug("main - update - exit");
-    }//}}}
-    
+    };//}}}
+ 
     return self;
 })();
 
@@ -169,7 +217,7 @@ document.addEventListener('WebComponentsReady', function() {//{{{
         main.json_url = window.location.pathname.slice(1);
     } catch (e) {
         main.char_level = 60;
-        main.json_url = '------------------------------------------------------------.ws7'
+        main.json_url = '------------------------------------------------------------.ws7';
     }
     main.build_url.value = main.url_base + '/' + main.json_url;
     document.querySelector('.a-portrait').setAttribute('href', sprintf('%s/portrait/%s', main.url_base, main.json_url));
