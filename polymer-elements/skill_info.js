@@ -11,7 +11,9 @@ Polymer('skill-info', {
         'cost': '<p><span class="info-orange">SP Cost: </span><span class="info-default">%d</span></p>',
         'reqlevel': '<p><span class="info-orange">Req Level: </span><span class="info-default">%d</span></p>',
         'reqskill': '<p><span class="info-orange">Req Skill: </span><span class="info-default">%s level %d</span></p>',
-        'description': '<p><span class="info-default">%s</span></p>'
+        'description': '<p><span class="info-default">%s</span></p>',
+        'mp_cost': '<p><span class="info-orange">MP Cost: </span><span class="info-default">%.1f%%</span></p>',
+        'cooldown': '<p><span class="info-orange">Cooldown: </span><span class="info-default">%.0f s</span></p>'
     },
 
     get_description: function(slevel) {//{{{
@@ -19,13 +21,14 @@ Polymer('skill-info', {
         var description, rep;
         if (this.pve) {
             rep = slevel.description_pve.replace(/\\n/g, '<br>');
-            description = sprintf(this.uistring['description'], rep);
+            description = sprintf(this.uistring['mp_cost'], slevel.mp_cost_pve);
+            description += sprintf(this.uistring['cooldown'], slevel.cooldown_pve);
+            description += sprintf(this.uistring['description'], rep);
         } else {
             rep = slevel.description_pve.replace(/\\n/g, '<br>');
-            description = sprintf(this.uistring['description'], rep);
+            description += sprintf(this.uistring['description'], rep);
         }
         for (key in this.color_codes) {
-            console.debug(key);
             description = description.replace(new RegExp(key, 'g'), this.color_codes[key]);
         }
         console.debug('skill-info.get_description - exit');

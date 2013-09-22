@@ -32,6 +32,10 @@ var model = (function () {
         this.skill = null;
         this.sp_cost = 0;
         this.sp_cost_cumulative = 0;
+        this.mp_cost_pve = 0;
+        this.mp_cost_pvp = 0;
+        this.cooldown_pve = 0;
+        this.cooldown_pvp = 0;
     };//}}}
     
     self.job_byid = {};
@@ -101,6 +105,10 @@ var model = (function () {
             slevel.skill = self.skill_byid[obj.fields.skill];
             slevel.sp_cost = obj.fields.sp_cost;
             slevel.sp_cost_cumulative = obj.fields.sp_cost_cumulative;
+            slevel.mp_cost_pve = obj.fields.mp_cost_pve;
+            slevel.mp_cost_pvp = obj.fields.mp_cost_pvp;
+            slevel.cooldown_pve = obj.fields.cooldown_pve;
+            slevel.cooldown_pvp = obj.fields.cooldown_pvp;
 
             slevel.skill.level[slevel.level] = slevel;
             if (slevel.req_level <= char_level) { slevel.skill.numlevel += 1; }
