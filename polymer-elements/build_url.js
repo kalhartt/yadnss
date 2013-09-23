@@ -79,17 +79,26 @@ Polymer('build-url', {
 
     unhash_build: function(message) {//{{{
         console.debug("build-url.unhash_build - enter");
+        var n, i, level, skill, slevel;
         var msg = message.split('.')[0];
         var result = {};
         var num = 0;
         var count = 0;
-        for (var n in model.job_byindx){
-            for (var i=0; i<24; i++) {
+
+        for (n in model.job_byindx[0].skill) {
+            skill = model.job_byindx[0].skill[n];
+            slevel = skill.level[1];
+            if (slevel.req_level == 1 && slevel.sp_cost === 0) {
+                result[skill.id] = 1;
+            }
+        }
+        for (n in model.job_byindx){
+            for (i=0; i<24; i++) {
                 if (count%6 === 0) {
                     num = this.unhash(msg.slice(0,5));
                     msg = msg.slice(5);
                 }
-                var level = num>>(25-(count%6)*5)&31;
+                level = num>>(25-(count%6)*5)&31;
                 if (level>0) { result[model.job_byindx[n].skill[i].id] = level;}
                 count++;
             }

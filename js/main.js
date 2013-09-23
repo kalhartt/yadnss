@@ -139,7 +139,6 @@ var main = (function () {
         for (n in slevels) {
             if (slevels[n].skill.ultimate) { continue; }
             for (i in slevels[n].skill.req_slevel){
-                if (slevels[n].skill.req_slevel[i].sp_cost_cumulative === 0) { continue; }
                 req = {
                     'skill': slevels[n].skill,
                     'req': slevels[n].skill.req_slevel[i]
