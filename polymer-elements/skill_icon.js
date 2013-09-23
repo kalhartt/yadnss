@@ -5,30 +5,39 @@ Polymer('skill-icon', {
 
     set_skill: function(skill, static_base){//{{{
         console.debug("skill-icon.set_skill - enter");
+        var img, icon, x, y;
         this.skill = skill;
         this.static_base = static_base;
-        this.shadowRoot.querySelector('.skill-icon-bg').src = sprintf('%simg/lo/back.png', this.static_base);
-        this.shadowRoot.querySelector('.skill-icon-fg').src = sprintf('%simg/lo/%s.png', this.static_base, skill.icon);
-        this.shadowRoot.querySelector('.skill-icon-fg').id = skill.id;
+        img = this.shadowRoot.querySelector('img');
+        icon = Math.floor(skill.icon / 100);
+        icon = icon === 0 ? 1 : icon;
+        img.id = skill.id;
+        x = -50*((skill.icon%100)%10);
+        y = -50*(Math.floor((skill.icon%100)/10));
+        img.style.margin = sprintf('%dpx 0 0 %dpx', y, x);
         this.update(0);
         console.debug("skill-icon.set_skill - exit");
     },//}}}
 
     set_hi: function(){//{{{
         console.debug("skill-icon.set_hi - enter");
-        this.shadowRoot.querySelector('.skill-icon-fg').src = sprintf('%simg/hi/%s.png', this.static_base, this.skill.icon);
+        var icon = Math.floor(this.skill.icon / 100);
+        icon = icon === 0 ? 1 : icon;
+        this.shadowRoot.querySelector('img').src = sprintf('%simg/hi/%d.png', this.static_base, icon);
         console.debug("skill-icon.set_hi - exit");
     },//}}}
 
     set_lo: function(){//{{{
-        console.debug("skill-icon.set_hi - enter");
-        this.shadowRoot.querySelector('.skill-icon-fg').src = sprintf('%simg/lo/%s.png', this.static_base, this.skill.icon);
-        console.debug("skill-icon.set_hi - exit");
+        console.debug("skill-icon.set_lo - enter");
+        var icon = Math.floor(this.skill.icon / 100);
+        icon = icon === 0 ? 1 : icon;
+        this.shadowRoot.querySelector('img').src = sprintf('%simg/lo/%d.png', this.static_base, icon);
+        console.debug("skill-icon.set_lo - exit");
     },//}}}
 
     set_handle: function(click, context, hover){//{{{
-        console.debug("skill-icon.set_hi - enter");
-        var img = this.shadowRoot.querySelector('.skill-icon-fg');
+        console.debug("skill-icon.set_handle - enter");
+        var img = this.shadowRoot.querySelector('img');
         img.addEventListener('mousedown', function(e) {
             e.preventDefault();
             e.stopPropagation();
@@ -46,14 +55,14 @@ Polymer('skill-icon', {
         });
         img.addEventListener('contextmenu', function(e) {e.preventDefault();});
         img.addEventListener('mouseover', hover);
-        console.debug("skill-icon.set_hi - exit");
+        console.debug("skill-icon.set_handle - exit");
     },//}}}
 
     update: function(level) {//{{{
         console.debug("skill-icon.update - enter");
         this.level = level;
         if (this.level > 0) { this.set_hi(); } else { this.set_lo(); }
-        this.shadowRoot.querySelector('span').innerHTML = sprintf('%d/%d', level, this.skill.numlevel);
+        this.shadowRoot.querySelector('.badge').innerHTML = sprintf('%d/%d', level, this.skill.numlevel);
         console.debug("skill-icon.update - exit");
     }//}}}
 
