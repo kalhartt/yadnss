@@ -14,7 +14,7 @@ var main = (function () {
 
     self.init_elements = function() {//{{{
         console.debug("main - init_elements - enter");
-        self.skill_points.set_labels(model.job_byindx);
+        self.skill_points.set_labels(model.job_byindx, self.char_level);
         self.level_input.querySelector('.btn').addEventListener('click', self.level_reset);
         $('.build-url-copy').tooltip();
         document.querySelector('.build-url-copy').addEventListener('click', function(){
@@ -48,6 +48,8 @@ var main = (function () {
                self.skill_grid[model.skill_byid[skill_id].job.index].icon[skill_id].update(level);
             }
         }
+
+        self.update();
         console.debug("main - init_elements - exit");
     };//}}}
 
@@ -220,7 +222,7 @@ document.addEventListener('WebComponentsReady', function() {//{{{
         main.json_url = window.location.pathname.slice(1);
     } catch (e) {
         main.char_level = 60;
-        main.json_url = '------------------------------------------------------------.ws7';
+        main.json_url = '------------------------------------------------------------.wo-';
     }
     main.build_url.value = main.url_base + '/' + main.json_url;
     document.querySelector('.a-portrait').setAttribute('href', sprintf('%s/portrait/%s', main.url_base, main.json_url));
