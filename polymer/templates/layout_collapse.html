@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+  <head>
+    <title>YADNSS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/yadnss.css' %}"></script>
+    <script src="{% static 'js/polymer.min.js' %}"></script>
+    <link rel="import" href="{% static 'polymer-elements/skill_grid.html' %}">
+    <link rel="import" href="{% static 'polymer-elements/skill_points.html' %}">
+    <link rel="import" href="{% static 'polymer-elements/skill_icon.html' %}">
+    <link rel="import" href="{% static 'polymer-elements/skill_info.html' %}">
+    <link rel="import" href="{% static 'polymer-elements/build_url.html' %}">
+    <link rel="import" href="{% static 'polymer-elements/polymer-ajax.html' %}">
+    <link rel="import" href="{% static 'polymer-elements/polymer-collapse.html' %}">
+    <link rel="import" href="{% static 'polymer-elements/polymer-ui-collapsible.html' %}">
+    <link rel="import" href="{% static 'polymer-elements/polymer-ui-accordion.html' %}">
+  </head>
+  <body>
+    <polymer-ajax url="" handleAs="json"></polymer-ajax>
+    <div class="container">
+        <nav class="navbar navbar-default" role="navigation">
+            {% include "navbar.html" %}
+        </nav>
+        <div class="row">
+            <div class="input-group">
+
+                <span class="input-group-addon">Build URL</span>
+
+                <input class="form-control build-url" type="text" value=""></input>
+
+                <span class="input-group-btn">
+
+                    <button class="btn btn-default build-url-copy" type="button" title="Select URL">
+                        <i class="icon-paper-clip icon-large"></i>
+                    </button>
+
+                    <button class="btn btn-default build-url-download dropdown-toggle" data-toggle="dropdown" type="button" title="Download as picture">
+                        <i class="icon-download icon-large"></i>
+                    </button>
+
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#" class="a-portrait">Portrait</a></li>
+                        <li><a href="#" class="a-landscape">Landscape</a></li>
+                    </ul>
+                </span>
+
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-4 col-md-push-4">
+                <polymer-ui-accordion selected="0">
+                </polymer-ui-accordion>
+            </div>
+            <div class="col-md-4 col-md-pull-4">
+                <div class="panel input-group" id="level-input">
+                    <span class="input-group-addon">Level</span>
+                    <input class="form-control" type="text" placeholder="60"></input>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button">Reset</button>
+                    </span>
+                </div>
+                <skill-points></skill-points>
+                <div class="panel panel-default">
+                    <div class="panel-heading">Warnings</div>
+                    <div class="panel-body">
+                        <ul class="skill-warning"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <skill-info></skill-info>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/collapse.js' %}"></script>
+    <script src="{% static 'js/dropdown.js' %}"></script>
+    <script src="{% static 'js/sprintf.js' %}"></script>
+    <script src="{% static 'js/model.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+  </body>
+</html>
