@@ -1,0 +1,3 @@
+# collectstatic fails if this directory doesn't exist
+*
+!.gitignore
