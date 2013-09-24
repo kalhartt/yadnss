@@ -1,0 +1,12 @@
+[submodule "assets/dnestpy"]
+	path = assets/dnestpy
+	url = git@github.com:kalhartt/dnestpy.git
+[submodule "assets/polymer"]
+	path = assets/polymer
+	url = git://github.com/Polymer/polymer.git
+[submodule "assets/bootstrap"]
+	path = assets/bootstrap
+	url = git://github.com/twbs/bootstrap.git
+[submodule "assets/Font-Awesome"]
+	path = assets/Font-Awesome
+	url = git://github.com/FortAwesome/Font-Awesome.git
