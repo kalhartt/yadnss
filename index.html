@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-wdth, intial-scale=1.0">
+        <title>YADNSS</title>
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+        <link href="css/yadnss.css" rel="stylesheet">
+    </head>
+    <body>
+
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">YADNSS</a>
+            </div>
+
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">About</a></li>
+                    <li><a href="http://yadnss.herokuapp.com/">Demo</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <main class="container">
+            <div class="jumbotron">
+                <div class="container">
+                    <h1>YADNSS</h1>
+                    <p>A DragonNest skill simulator built on google-polymer</p>
+                    <p><a class="btn btn-primary btn-lg" href="http://yadnss.herokuapp.com/">Try the demo</a><p>
+                </div>
+            </div>
+
+            <article class="col-md-4">
+                <h2>Features</h2>
+                <hr>
+                <ul>
+                    <li>Doesn't work in IE</li>
+                    <li>Download a build as a picture</li>
+                    <li>Build URL's for saving and distributing a skill build</li>
+                    <li>Unobtrusive warning system</li>
+                    <li>PvE and PvP skill information</li>
+                    <li>Skill information up to level 100</li>
+                </ul>
+            </article>
+
+            <article class="col-md-4">
+                <h2>Usage</h2>
+                <hr>
+                <ul>
+                    <li>Mouse over a skill to view its information in the info panel</li>
+                    <li>Click/Right-Click a skill to increase/decrease its level </li>
+                    <li>Shift-Click/Shift-Right-Click a skill to max/zero its level (Ctrl-Click works also)</li>
+                    <li>Other features should be intuitive</li>
+                </ul>
+            </article>
+
+            <article class="col-md-4">
+                <h2>Bugs</h2>
+                <hr>
+                <ul>
+                    <li>Doesn't work in IE</li>
+                    <li>Warning system fails to detect class based sp requirements</li>
+                </ul>
+            </article>
+
+        </main>
+
+        <footer>
+            <ol class="breadcrumb">
+                <li><a href="#">Github Project</a></li>
+                <li><a href="#">Google Polymer</a></li>
+                <li><a href="#">Demo</a></li>
+                <li><a href="#">Forum Topic</a></li>
+            </ol>
+        </footer>
+
+        <script type="text/javascript">
+
+          var _gaq = _gaq || [];
+          _gaq.push(['_setAccount', 'UA-XXXXX-X']);
+          _gaq.push(['_trackPageview']);
+
+          (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          })();
+
+        </script>
+        <script src="js/jquery-2.0.3.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+    </body>
+</html>
