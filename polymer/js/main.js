@@ -1,9 +1,6 @@
 var main = (function () {
     var self = {};
     
-    self.alphabet = {};
-    self.alphabet_reverse = {};
-    self.build_url;
     self.skill_points;
     self.skill_warning;
     self.skill_info;
@@ -13,113 +10,6 @@ var main = (function () {
     self.json_url;
     self.level_input;
     self.skill_grid = [];
-
-    var n = 0;
-    for (var i=45; i<123; i++) {
-        if (i == 46){ i = 48; }
-        if (i == 58){ i = 65; }
-        if (i == 91){ i = 95; }
-        if (i == 96){ i = 97; }
-        self.alphabet[n] = String.fromCharCode(i);
-        self.alphabet_reverse[String.fromCharCode(i)] = n;
-        n++;
-    }
-
-    self.hash = function(num, len) {//{{{
-        console.debug("main.hash - enter");
-        var result = '';
-        while (num !== 0) {
-            result += self.alphabet[num&63];
-            num = num>>6;
-        }
-        if (result.length < len) { 
-            result = result + new Array(1+len-result.length).join(self.alphabet[0]);
-        }
-        console.debug("main.hash - exit");
-        return result;
-    };//}}}
-
-    self.unhash = function(msg) {//{{{
-        console.debug("main.unhash - enter");
-        var result = 0;
-        for (var n=msg.length-1; n>=0; n--) {
-            result = (result<<6) | self.alphabet_reverse[msg[n]];
-        }
-        console.debug("main.unhash - exit");
-        return result;
-    };//}}}
-
-    self.hash_build = function() {//{{{
-        console.debug("main.hash_build - enter");
-        var n, i, slevel, skill;
-        var result = '';
-        var tmp = 0;
-        var tmp_count = 0;
-        for (n in model.job_byindx){
-            for (i=0; i<24; i++){
-                try {
-                    skill = model.job_byindx[n].skill[i];
-                    slevel = self.skill_grid[n].icon[skill.id].level;
-                } catch (e) {
-                    slevel = 0;
-                }
-                tmp = (tmp<<5)|slevel;
-                tmp_count++;
-                if (tmp_count == 6){
-                    result += self.hash(tmp, 5);
-                    tmp = 0;
-                    tmp_count = 0;
-                }
-            }
-        }
-        console.debug("main.hash_build - exit");
-        return result;
-    };//}}}
-
-    self.hash_job = function(job, level) {//{{{
-        console.debug("main.hash_job - enter");
-        var hash = self.hash(job.id<<7|level);
-        console.debug("main.hash_job - exit");
-        return hash;
-    };//}}}
-
-    self.unhash_build = function(message) {//{{{
-        console.debug("main.unhash_build - enter");
-        var n, i, level, skill, slevel;
-        var msg = message.split('.')[0];
-        var result = {};
-        var num = 0;
-        var count = 0;
-
-        for (n in model.job_byindx[0].skill) {
-            skill = model.job_byindx[0].skill[n];
-            slevel = skill.level[1];
-            if (slevel.req_level == 1 && slevel.sp_cost === 0) {
-                result[skill.id] = 1;
-            }
-        }
-        for (n in model.job_byindx){
-            for (i=0; i<24; i++) {
-                if (count%6 === 0) {
-                    num = self.unhash(msg.slice(0,5));
-                    msg = msg.slice(5);
-                }
-                level = num>>(25-(count%6)*5)&31;
-                if (level>0) { result[model.job_byindx[n].skill[i].id] = level;}
-                count++;
-            }
-        }
-        console.debug("main.unhash_build - exit");
-        return result;
-    };//}}}
-
-    self.unhash_job = function(message) {//{{{
-        console.debug("main.unhash_job - enter");
-        var msg = self.unhash(message.split('.')[1]);
-        var result = { 'job':msg>>7 , 'level':msg&127 };
-        console.debug("main.unhash_job - exit");
-        return result;
-    };//}}}
 
     self.init_elements = function() {//{{{
         console.debug("main - init_elements - enter");
@@ -149,7 +39,7 @@ var main = (function () {
             accordion.appendChild(collapsible);
         }
 
-        var slevels = self.unhash_build(self.json_url);
+        var slevels = build.unhash_build(self.json_url);
         for (var skill_id in slevels){
             var level = slevels[skill_id];
             if (model.skill_byid.hasOwnProperty(skill_id) && model.skill_byid[skill_id].numlevel >= level) {
@@ -166,7 +56,7 @@ var main = (function () {
         var last_job = model.job_byindx[model.job_byindx.length-1];
         var level = parseInt(self.level_input.querySelector('.form-control').value, 10);
         level = level > 100 ? 100 : level;
-        window.location = sprintf('%s/%s.%s', self.url_base, new Array(61).join('-'), self.hash_job(last_job, level));
+        window.location = sprintf('%s/%s.%s', self.url_base, new Array(61).join('-'), build.hash_job(last_job, level));
         console.debug("main - level_reset - exit");
     };//}}}
 
@@ -298,8 +188,8 @@ var main = (function () {
 
         console.debug('Update Build URL');//{{{
         var last_job = model.job_byindx[model.job_byindx.length-1];
-        var build_hash = self.hash_build();
-        var job_hash = self.hash_job(last_job, self.char_level);
+        var build_hash = build.hash_build();
+        var job_hash = build.hash_job(last_job, self.char_level);
         self.build_url.value = sprintf('%s/%s.%s', self.url_base, build_hash, job_hash);
         document.querySelector('.a-portrait').setAttribute('href', sprintf('%s/portrait/%s.%s', self.url_base, build_hash, job_hash));
         document.querySelector('.a-landscape').setAttribute('href', sprintf('%s/landscape/%s.%s', self.url_base, build_hash, job_hash));//}}}
@@ -324,7 +214,7 @@ document.addEventListener('WebComponentsReady', function() {//{{{
     try {
         var url_pattern = new RegExp('^/[A-Za-z0-9\-_]{60}\.[A-Za-z0-9\-_]+$');
         if (!url_pattern.test(window.location.pathname)) { throw "Invalid build url"; }
-        main.char_level = main.unhash_job(window.location.pathname).level;
+        main.char_level = build.unhash_job(window.location.pathname).level;
         main.level_input.querySelector('.form-control').value = main.char_level;
         main.json_url = window.location.pathname.slice(1);
     } catch (e) {
