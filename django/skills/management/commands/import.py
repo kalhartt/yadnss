@@ -7,7 +7,7 @@ import sys
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from dragonnest.settings import BASE_DIR
-sys.path.insert(0, os.path.join('..', 'dnestpy'))
+sys.path.insert(0, os.path.join('..', 'assets', 'dnestpy'))
 from dnt.dntfile import DNTFile
 from skills.models import Job, Skill, SkillLevel
 from skills.utils import hash_
