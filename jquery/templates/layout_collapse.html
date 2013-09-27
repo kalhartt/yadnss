@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+  <head>
+    <title>YADNSS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/yadnss.css' %}"></script>
+  </head>
+  <body>
+    <div class="container">
+      <nav class="navbar navbar-default" role="navigation">
+        {% include "navbar.html" %}
+      </nav>
+      <hr>
+      <div class="row">
+        <main class="col-md-4 col-md-push-4">
+            <div class="panel-group" id="accordion"></div>
+        </main>
+        <aside id="aside_l" class="col-md-4 col-md-pull-4"></aside>
+        <aside id="aside_r" class="col-md-4"></aside>
+      </div>
+      <footer></footer>
+    </div>
+    <script src="{% static 'js/jquery-2.0.3.js' %}"></script>
+    <script src="{% static 'js/underscore-min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/model.js' %}"></script>
+    <script src="{% static 'js/build.js' %}"></script>
+    <script src="{% static 'js/yadnss.js' %}"></script>
+    <script src="{% static 'js/layout/collapse.js' %}"></script>
+    <script src="{% static 'js/wid/menu.js' %}"></script>
+    <script src="{% static 'js/wid/nav.js' %}"></script>
+    <script src="{% static 'js/wid/skillgrid.js' %}"></script>
+    <script src="{% static 'js/wid/skillinfo.js' %}"></script>
+    <script src="{% static 'js/wid/skillicon.js' %}"></script>
+    <script src="{% static 'js/wid/skillpoints.js' %}"></script>
+    <script src="{% static 'js/wid/warning.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+  </body>
+</html>
+<!-- vim: set ts=2 sw=2 -->
