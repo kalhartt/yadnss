@@ -10,3 +10,6 @@
 [submodule "assets/Font-Awesome"]
 	path = assets/Font-Awesome
 	url = git://github.com/FortAwesome/Font-Awesome.git
+[submodule "assets/underscore"]
+	path = assets/underscore
+	url = git://github.com/jashkenas/underscore
