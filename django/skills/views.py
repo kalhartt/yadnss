@@ -18,13 +18,14 @@ def _set_access_control_headers(response):
 class JSONView(View):
 
     def get(self, request, *args, **kwargs):
-        num = utils.unhash_(kwargs['hash'].split('.')[1])
         try:
+            num = utils.unhash_(kwargs['hash'])
             assert num > 128
             job = Job.objects.get(id=num >> 7)
             level = num & 127
         except:
-            raise Http404
+            job = Job.objects.filter(number=2)[0]
+            level = 60
 
         jobs = []
         skills = []
