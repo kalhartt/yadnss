@@ -10,6 +10,7 @@ _ALPHABET_REVERSE = dict(zip(_ASCIIMAP, range(64)))
 
 
 _FONT = ImageFont.truetype(os.path.join(STATIC_ROOT, 'font', 'DejaVuSansCondensed-Bold.ttf'), 10)
+_FONT_TITLE = ImageFont.truetype(os.path.join(STATIC_ROOT, 'font', 'DejaVuSansCondensed-Bold.ttf'), 18)
 
 def hash_(num, length):
     result = ''
@@ -59,24 +60,34 @@ def build_img(build_hash, portrait=True):
         job = job.parent
     jobs.sort(key=lambda x: x.id)
     slevel = unhash_build(build_hash.split('.')[0], jobs)
-
+    
+    iconw = 50                                          # Size of the skill icon
+    iconm = 5                                           # Icon margin
+    titlem = 10                                         # Job title vertical margin
+    titleh = (_FONT_TITLE.getsize('I')[1] + iconm) * 2  # Job title badge height
+    gridw = (iconw + iconm) * 4 + iconm                 # Skill icon grid width
+    gridh = (iconw + iconm) * 6 + iconm                 # Skill icon grid height
     if portrait:
-        img = Image.new('RGBA', (250,390*len(jobs)), (0,0,0,0))
+        img = Image.new('RGBA', (gridw, len(jobs)*gridh), (0,0,0,0))
     else:
-        img = Image.new('RGBA', (270*len(jobs),370), (0,0,0,0))
+        img = Image.new('RGBA', (len(jobs)*gridw, gridh), (0,0,0,0))
 
     for n in range(len(slevel)):
         if n%24 == 0:
             if portrait:
-                x = 190
-                y = -50 + 390*(n/24)
+                x0 = 0
+                y0 = (n/24) * (gridh + titleh + 2 * titlem)
             else:
-                x = 190 + 270*(n/24)
-                y = -50
-        if n%4 == 0:
-            y += 60
-            x -= 240
-        x += 60
+                x0 = (n/24) * gridw
+                y0 = 0
+            # Draw Job Name
+            job = slevel[n][0].job
+            job_img = draw_text(job.name, font=_FONT_TITLE)
+            w, h = job_img.size
+            x = x0 + (gridw - w) / 2 
+            img.paste(job_img, (x, y0 + titlem), job_img)
+        x = x0 + iconm + (n % 4) * (iconm + iconw)
+        y = y0 + titleh + 2 * titlem + (n%24) / 4 * (iconm + iconw)
 
         if slevel[n][0] is None:
             continue
@@ -89,22 +100,24 @@ def build_img(build_hash, portrait=True):
         else:
             img_path = os.path.join(STATIC_ROOT, 'img', 'lo', '%d.png'%img_path)
 
-        # Crop the imagemap
-        cropx = 50*((slevel[n][0].icon%100)%10)
-        cropy = 50*((slevel[n][0].icon%100)/10)
-        box = (cropx, cropy, cropx+50, cropy+50)
+        # Crop the icon from the imagemap
+        cropx = iconw*((slevel[n][0].icon%100)%10)
+        cropy = iconw*((slevel[n][0].icon%100)/10)
+        box = (cropx, cropy, cropx+iconw, cropy+iconw)
         skill_img = Image.open(img_path).convert('RGBA')
         skill_img = skill_img.crop(box)
-
+        img.paste(skill_img, (x,y), skill_img)
+        
+        # Draw the skill level badge
         msg = '%d/%d' % (slevel[n][1], SkillLevel.objects.filter(skill=slevel[n][0], required_level__lte=level).count())
         badge_img = draw_text(msg)
-        img.paste(skill_img, (x,y), skill_img)
-        img.paste(badge_img, (x,y), badge_img)
+        w, h = badge_img.size
+        img.paste(badge_img, (x+iconw-w,y+iconw-h), badge_img)
 
     return img
 
-def draw_text(msg):
-    w, h = _FONT.getsize(msg)
+def draw_text(msg, font=_FONT):
+    w, h = font.getsize(msg)
     m = h/2
    
     scale = 16
@@ -115,10 +128,5 @@ def draw_text(msg):
     draw.pieslice((bw-bh,0,bw,bh), -90, 90, fill='#999999')
     draw.rectangle((bh/2,0,bw-bh/2,bh), fill='#999999')
     badge = badge.resize((w+h,h*2), Image.ANTIALIAS)
-
-    img = Image.new('RGBA', (60,60), (0,0,0,0))
-    draw = ImageDraw.Draw(img)
-    x, y = 50, 35
-    img.paste(badge, (x-w-h, y), badge)
-    draw.text((x-w-h+m, y+m+1), msg, font=_FONT, fill='#FFFFFF')
-    return img
+    ImageDraw.Draw(badge).text((m, m+1), msg, font=font, fill='#FFFFFF')
+    return badge
