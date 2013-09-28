@@ -49,7 +49,7 @@ yadnss.wid.Menu.prototype.template =
 yadnss.wid.Menu.prototype.update = function(jobs, level) {
     var hash = '/' + build.hash_build(jobs) + '.' + build.hash_job(_.last(jobs), level);
     this.$element.find('input').val(window.location.origin + hash);
-    this.$element.find('a-portrait').val('/portrait' + hash);
-    this.$element.find('a-landscape').val('/landscape' + hash);
+    this.$element.find('.a-portrait').attr('href', '/portrait' + hash);
+    this.$element.find('.a-landscape').attr('href', '/landscape' + hash);
     return this;
 };
