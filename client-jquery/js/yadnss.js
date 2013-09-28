@@ -30,7 +30,7 @@ var yadnss = (function() {
 
     self.init = function(){
         var jobs = model.job_byindx;
-        build.unhash_build(self.buildhash[1], jobs);
+        if (self.buildhash !== null) { build.unhash_build(self.buildhash[1], jobs); }
         self.doc.init_elements();
         self.doc.points.
             set_labels(jobs).
