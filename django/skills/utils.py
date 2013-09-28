@@ -61,33 +61,37 @@ def build_img(build_hash, portrait=True):
     jobs.sort(key=lambda x: x.id)
     slevel = unhash_build(build_hash.split('.')[0], jobs)
     
-    iconw = 50                                          # Size of the skill icon
-    iconm = 5                                           # Icon margin
-    titlem = 10                                         # Job title vertical margin
-    titleh = (_FONT_TITLE.getsize('I')[1] + iconm) * 2  # Job title badge height
-    gridw = (iconw + iconm) * 4 + iconm                 # Skill icon grid width
-    gridh = (iconw + iconm) * 6 + iconm                 # Skill icon grid height
+    iconw = 50                                              # Size of the skill icon
+    iconm = 5                                               # Icon margin
+    titleh = (_FONT_TITLE.getsize('I')[1] + 2* iconm) * 2   # Job title badge height
+    gridw = (iconw + iconm) * 4 + iconm                     # Skill icon grid width
+    gridh = (iconw + iconm) * 6 + iconm                     # Skill icon grid height
+    gridm = 15                                              # margin between grids
     if portrait:
-        img = Image.new('RGBA', (gridw, len(jobs)*gridh), (0,0,0,0))
+        imgw = gridw
+        imgh = len(jobs) * (gridh + titleh + gridm) - gridm
+        img = Image.new('RGBA', (imgw, imgh), (0,0,0,0))
     else:
-        img = Image.new('RGBA', (len(jobs)*gridw, gridh), (0,0,0,0))
+        imgw = len(jobs) * (gridw + gridm) - gridm
+        imgh = gridh + titleh
+        img = Image.new('RGBA', (imgw, imgh), (0,0,0,0))
 
     for n in range(len(slevel)):
         if n%24 == 0:
             if portrait:
                 x0 = 0
-                y0 = (n/24) * (gridh + titleh + 2 * titlem)
+                y0 = (n/24) * (gridh + titleh + gridm)
             else:
-                x0 = (n/24) * gridw
+                x0 = (n/24) * (gridw + gridm)
                 y0 = 0
             # Draw Job Name
             job = slevel[n][0].job
             job_img = draw_text(job.name, font=_FONT_TITLE)
             w, h = job_img.size
             x = x0 + (gridw - w) / 2 
-            img.paste(job_img, (x, y0 + titlem), job_img)
+            img.paste(job_img, (x, y0 + iconm), job_img)
         x = x0 + iconm + (n % 4) * (iconm + iconw)
-        y = y0 + titleh + 2 * titlem + (n%24) / 4 * (iconm + iconw)
+        y = y0 + titleh + (n%24) / 4 * (iconm + iconw)
 
         if slevel[n][0] is None:
             continue
