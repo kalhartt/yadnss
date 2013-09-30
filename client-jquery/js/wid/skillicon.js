@@ -40,6 +40,42 @@ yadnss.wid.SkillIcon = function(skill){
 
     this.$img.
         on('contextmenu', function() {return false;}).
+        on('touchstart', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            self.start_x = event.originalEvent.touches[0].pageX;
+            self.start_y = event.originalEvent.touches[0].pageY;
+            $doc.trigger($.Event('SkillIcon.hover'), skill);
+            return false;
+        }).
+        on('touchmove', function(event) {
+            self.end_x = event.originalEvent.touches[0].pageX;
+            self.end_y = event.originalEvent.touches[0].pageY;
+            return false;
+        }).
+        on('touchend', function(event) {
+            var fact = 2;
+            var dx = self.end_x - self.start_x;
+            var dy = self.end_y - self.start_y;
+            var adx = Math.abs(dx);
+            var ady = Math.abs(dy);
+            if (adx > 30 && adx > fact*ady) {
+                if (dx > 0) {
+                    self.skill.increment(1);
+                } else {
+                    self.skill.increment(-1);
+                }
+            } else if (ady > 30 && ady > fact*adx) {
+                if (dy > 0) {
+                    self.skill.increment(-100);
+                } else {
+                    self.skill.increment(100);
+                }
+            }
+            $doc.trigger($.Event('SkillIcon.click'), skill);
+            self.update();
+            return false;
+        }).
         on('mousedown', function(event) {
             event.preventDefault();
             event.stopPropagation();
