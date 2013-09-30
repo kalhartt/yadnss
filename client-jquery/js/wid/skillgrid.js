@@ -26,8 +26,8 @@ yadnss.wid.SkillGrid = function(job){
 
     body = this.$element.find('.skill-grid')
     _.each(job.skill, function(skill, index, skills) {
-        x = (3 - index % 4) * 60 + 10;
-        y = Math.floor(index / 4) * 60 + 10;
+        x = (3 - index % 4) * 66 + 8;
+        y = Math.floor(index / 4) * 74 + 12;
         self.icon[index] = new yadnss.wid.SkillIcon(skill)
         self.icon[index].$element.appendTo(body).css({'top': y + 'px', 'right': x + 'px'});
     });
