@@ -4,8 +4,10 @@ yadnss.doc.init_elements = function() {
     yadnss.doc.points = new yadnss.wid.SkillPoints();
     yadnss.doc.warning = new yadnss.wid.Warning();
     yadnss.doc.menu = new yadnss.wid.Menu();
+    yadnss.doc.level = new yadnss.wid.Level();
 
     yadnss.doc.info.$element.appendTo('#aside_r');
+    yadnss.doc.level.$element.appendTo('#aside_l');
     yadnss.doc.points.$element.appendTo('#aside_l');
     yadnss.doc.warning.$element.appendTo('#aside_l');
     yadnss.doc.menu.$element.insertAfter('nav');

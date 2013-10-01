@@ -7,36 +7,61 @@ var model = (function () {
     var self = {};
    
     /**
-     * Container for Skill objects
+     * Represents a character job, but is really just
+     * a container for Skill objects.
      * @constructor
      * @memberof model
+     * @name Job
      * @param {object} obj - Json object received
      */
     self.Job = function(obj) {//{{{
         var o = obj.fields;
 
-        /** @member {number} */
+        /**
+         * @memberof model.Job
+         * @member {number} id
+         * @instance
+         */
         this.id = obj.pk;
 
-        /** @member {string} */
+        /**
+         * @memberof model.Job
+         * @member {string} name
+         * @instance
+         */
         this.name = o.name;
 
-        /** @member {number} */
+        /**
+         * @member {number} index
+         * @memberof model.Job
+         * @instance
+         */
         this.index = o.number;
 
-        /** @member {Job} */
+        /**
+         * @member {Job} parent
+         * @memberof model.Job
+         * @instance
+         */
         this.parent = null;
         if (o.parent !== null) {
             this.parent = self.job_byid[o.parent];
         }
 
-        /** @member {array[model.Skill]} */
+        /**
+         * Array of associated skills, indexed by
+         * position in the skill grid.
+         * @member {Skill[]}
+         * @memberof model.Job
+         * @instance
+         */
         this.skill = [];
     };//}}}
 
     /**
      * Represents a skill object
      * @constructor
+     * @name Skill
      * @memberof model
      * @param {object} obj - Json object received
      */
@@ -44,30 +69,50 @@ var model = (function () {
         var n;
         var o = obj.fields;
 
-        /** @member {number} */
+        /**
+         * @member {number} id
+         * @memberof model.Skill
+         * @instance
+         */
         this.id = obj.pk;
 
-        /** @member {model.Job} */
+        /**
+         * @member {Job} job
+         * @memberof model.Skill
+         * @instance
+         */
         this.job = self.job_byid[o.job];
 
-        /** @member {string} */
+        /**
+         * @member {string} name
+         * @memberof model.Skill
+         * @instance
+         */
         this.name = o.name;
 
-        /** @member {string} */
+        /**
+         * @member {string} description
+         * @memberof model.Skill
+         * @instance
+         */
         this.description = o.description;
 
         /**
          * The icon id where
          * icon / 100 is the iconmap filename 
          * icon % 100 is the position in the map
-         * @member {number}
+         * @member {number} icon
+         * @memberof model.Skill
+         * @instance
          */
         this.icon = o.icon;
 
         /**
          * Array of SkillLevel objects representing
          * the unlock requirements for this skill.
-         * @member {Array[model.SkillLevel]} 
+         * @member {SkillLevel[]} req_slevel
+         * @memberof model.Skill
+         * @instance
          */
         this.req_slevel = [];
 
@@ -75,7 +120,9 @@ var model = (function () {
          * Array whose n-th element represents the
          * required sp investment in the n-th job
          * to unlock this skill.
-         * @member {array[number]}
+         * @member {number[]} req_sp
+         * @memberof model.Skill
+         * @instance
          */
         this.req_sp = [];
         for (n=0; o.hasOwnProperty('sp_required_'+n); n++) {
@@ -86,31 +133,50 @@ var model = (function () {
          * The position on the skill grid beginnning
          * with 0 at the upper-left and incrementing
          * from left to right then top to bottom.
-         * @member {number}
+         * @member {number} index
+         * @memberof model.Skill
+         * @instance
          */
         this.index = o.tree_index;
 
-        /** @member {number} */
+        /**
+         * @member {number} level
+         * @memberof model.Skill
+         * @instance
+         */
         this.level = 0;
 
-        /** @member {number} */
+        /**
+         * @member {number} maxlevel
+         * @memberof model.Skill
+         * @instance
+         */
         this.maxlevel = 0;
 
         /**
          * Array containing associated SkillLevels
          * indexed by their level
-         * @member {array[SkillLevel]}
+         * @member {SkillLevel[]} slevels
+         * @memberof model.Skill
+         * @instance
          */
         this.slevels = [];
 
-        /** @member {boolean} */
+        /** 
+         * @member {boolean} ultimate
+         * @memberof model.Skill
+         * @instance
+         */
         this.ultimate = o.ultimate;
     };//}}}
 
     /**
-     * Increments the skill level by a given amount
-     * @method
-     * @methodof Skill
+     * Increments the skill level by a given amount.
+     * Pass a negative argument to decrease the level.
+     * The skill will be set to the nearest valid level.
+     * @instance
+     * @method increment
+     * @memberof model.Skill
      * @param {number} num - amount to increase level by
      * @returns {Skill}
      */
@@ -122,9 +188,10 @@ var model = (function () {
 
     /**
      * Ensures level is within appropriate range and
-     * an associated SkillLevel exists
-     * @method
-     * @methodof Skill
+     * an associated SkillLevel exists.
+     * @instance
+     * @method validate_level
+     * @memberof model.Skill
      * @returns {Skill}
      */
     self.Skill.prototype.validate_level = function () {
@@ -137,10 +204,11 @@ var model = (function () {
     };
 
     /**
-     * Gets the currently associated skill level
+     * Gets the currently associated skill level.
      * Returns undefined if level === 0
-     * @method
-     * @methodof Skill
+     * @instance
+     * @method current
+     * @memberof model.Skill
      * @return {SkillLevel}
      */
     self.Skill.prototype.current = function() {
@@ -150,8 +218,9 @@ var model = (function () {
     /**
      * Gets the next associated skill level
      * Returns undefined if no further level exists
-     * @method
-     * @methodof Skill
+     * @instance
+     * @method next
+     * @memberof model.Skill
      * @return {SkillLevel}
      */
     self.Skill.prototype.next = function() {
@@ -160,8 +229,9 @@ var model = (function () {
 
     /**
      * Gets the cumulative sp cost of the current level
-     * @method
-     * @methodof Skill
+     * @instance
+     * @method sp_cost
+     * @memberof model.Skill
      * @return {number}
      */
     self.Skill.prototype.sp_cost = function() {
@@ -173,8 +243,11 @@ var model = (function () {
 
 
     /**
-     * Represents a skill level
+     * Represents a skill level. If the constructed SkillLevel is a default
+     * skill, that is `(req_level == 1 && sp_cost == 0)`, the parent skill
+     * object will have its level set to 1.
      * @constructor
+     * @name SkillLevel
      * @memberof model
      * @param {object} obj - Json object received
      */
@@ -182,34 +255,74 @@ var model = (function () {
         var descpvp, descpve, paramspve, paramspvp, n;
         var o = obj.fields;
 
-        /** @member {number} */
+        /**
+         * @member {number} id
+         * @memberof model.SkillLevel
+         * @instance
+         */
         this.id = obj.pk;
 
-        /** @member {number} */
+        /**
+         * @member {number} level
+         * @memberof model.SkillLevel
+         * @instance
+         */
         this.level = o.level;
 
-        /** @member {number} */
+        /**
+         * @member {number} required_level
+         * @memberof model.SkillLevel
+         * @instance
+         */
         this.req_level = o.required_level;
 
-        /** @member {model.Skill} */
+        /**
+         * @member {Skill} skill
+         * @memberof model.SkillLevel
+         * @instance
+         */
         this.skill = self.skill_byid[o.skill];
 
-        /** @member {number} */
+        /**
+         * @member {number} sp_cost
+         * @memberof model.SkillLevel
+         * @instance
+         */
         this.sp_cost = o.sp_cost;
 
-        /** @member {number} */
+        /**
+         * @member {number} sp_cost_cumulative
+         * @memberof model.SkillLevel
+         * @instance
+         */
         this.sp_cost_cumulative = o.sp_cost_cumulative;
 
-        /** @member {number} */
+        /**
+         * @member {number} mp_cost_pve
+         * @memberof model.SkillLevel
+         * @instance
+         */
         this.mp_cost_pve = o.mp_cost_pve;
 
-        /** @member {number} */
+        /**
+         * @member {number} mp_cost_pvp
+         * @memberof model.SkillLevel
+         * @instance
+         */
         this.mp_cost_pvp = o.mp_cost_pvp;
 
-        /** @member {number} */
+        /**
+         * @member {number} cooldown_pve
+         * @memberof model.SkillLevel
+         * @instance
+         */
         this.cooldown_pve = o.cooldown_pve;
 
-        /** @member {number} */
+        /**
+         * @member {number} cooldown_pvp
+         * @memberof model.SkillLevel
+         * @instance
+         */
         this.cooldown_pvp = o.cooldown_pvp;
 
         descrpve = this.skill.description;
@@ -221,10 +334,18 @@ var model = (function () {
             descrpvp = descrpvp.replace('{'+n+'}', paramspvp[n]);
         }
 
-        /** @member {string} */
+        /**
+         * @member {string} description_pve
+         * @memberof model.SkillLevel
+         * @instance
+         */
         this.description_pve = descrpve;
 
-        /** @member {string} */
+        /**
+         * @member {string} description_pvp
+         * @memberof model.SkillLevel
+         * @instance
+         */
         this.description_pvp = descrpvp;
 
         // Autoset skill to level1 if this is default slevel
@@ -234,8 +355,8 @@ var model = (function () {
     /**
      * Get the MP cost
      * @method
-     * @memberof SkillLevel
-     * @param pve {boolean} - if true, return the pve value
+     * @memberof model.SkillLevel
+     * @param {boolean} pve - if true, return the pve value
      * @return {number}
      */
     self.SkillLevel.prototype.get_mp_cost = function (pve) {
@@ -266,28 +387,28 @@ var model = (function () {
 
     /**
      * Array containing Job instances indexed by id
-     * @member {array[model.Job]}
+     * @member {Job[]}
      * @memberof model
      */
     self.job_byid = [];
 
     /**
      * Array containing Job instances indexed by job index
-     * @member {array[model.Job]}
+     * @member {Job[]}
      * @memberof model
      */
     self.job_byindx = [];
 
     /**
      * Array containing Skill instances indexed by id
-     * @member {array[model.Skill]}
+     * @member {Skill[]}
      * @memberof model
      */
     self.skill_byid = [];
 
     /**
      * Array containing SkillLevel instances indexed by id
-     * @member {array[model.Job]}
+     * @member {Job[]}
      * @memberof model
      */
     self.slevel_byid = [];
@@ -296,7 +417,7 @@ var model = (function () {
      * Function for parsing an ajax response with skill information
      * @method
      * @memberof model
-     * @param {array[obj]} response - array of objects in response
+     * @param {object[]} response - array of objects in response
      * @param {number} char_level - level of represented character
      * @returns {model}
      */

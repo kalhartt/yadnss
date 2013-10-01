@@ -1,3 +1,6 @@
+/**
+ * @namespace
+ */
 var yadnss = (function() {
     var self
     self = {};
@@ -6,6 +9,8 @@ var yadnss = (function() {
      * Holds widget constructors
      * See wid/*.js
      * @namespace
+     * @name wid
+     * @memberof yadnss
      */
     self.wid = {};
 
@@ -13,12 +18,27 @@ var yadnss = (function() {
      * Holds document objects defined by a layout
      * See layout/*.js
      * @namespace
+     * @name doc
+     * @memberof yadnss
      */
     self.doc = {};
 
-    /** @member {Deferred} */
+    /**
+     * jQuery Deferred object to allow async ajax calls
+     * @member {Deferred} readyDeferred
+     * @memberof yadnss
+     * @instance
+     */
     self.readyDeferred = $.Deferred();
 
+    /**
+     * RegExp match group extracing build from the window path.
+     * buildhash[1] is the skill level hash and buildhash[2]
+     * is the job hash.
+     * @member {string[]} buildhash
+     * @memberof yadnss
+     * @instance
+     */
     self.buildhash = /([a-zA-Z0-9-\_]+)\.([a-zA-Z0-9-\_]+)/.exec(window.location.pathname);
     if (self.buildhash === null) {
         self.jsonurl = '/api/';
@@ -28,6 +48,13 @@ var yadnss = (function() {
         self.char_level = build.unhash_job(self.buildhash[2])['level'];
     }
 
+    /**
+     * Initializes the document by generating widgets and attaching callbacks.
+     * @method init
+     * @memberof yadnss
+     * @instance
+     * @returns {yadnss}
+     */
     self.init = function(){
         var jobs = model.job_byindx;
         if (self.buildhash !== null) { build.unhash_build(self.buildhash[1], jobs); }
@@ -43,9 +70,20 @@ var yadnss = (function() {
             on('SkillIcon.hover', function (event, skill) {
                 self.doc.info.update(skill);
             });
+        self.doc.level.
+            set_job(_.last(jobs)).
+            set_level(self.char_level);
         self.update();
+        return self;
     };
-
+    
+    /**
+     * Updates widgets in the view and calculates skill warnings.
+     * @method update
+     * @memberof yadnss
+     * @instance
+     * @returns {yadnss}
+     */
     self.update = function(){
         var job_names, msg, warn_sp, warn_req, msg, ultimates, ult_pass;
         var jobs = model.job_byindx;
@@ -106,6 +144,8 @@ var yadnss = (function() {
 
             });
         });
+
+        return self;
     };
 
     return self;
